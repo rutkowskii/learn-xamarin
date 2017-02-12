@@ -1,7 +1,8 @@
 ﻿using System.Windows.Input;
+using learn_xamarin.Navigation;
 using Xamarin.Forms;
 
-namespace learn_xamarin
+namespace learn_xamarin.Vm
 {
     public class WelcomeViewModel
     {
@@ -23,5 +24,29 @@ namespace learn_xamarin
 
 
         public ICommand MoneySpentCommnand { get; private set; }
+    }
+
+
+    public class MoneySpentSumViewModel
+    {
+        private string _sum;
+
+        public MoneySpentSumViewModel()
+        {
+            ConfirmationCommand = new Command(ConfirmSum);
+        }
+
+        private void ConfirmSum()
+        {
+            return;
+        }
+
+        public ICommand ConfirmationCommand { get; private set; }
+
+        public string Sum
+        {
+            get { return _sum; }
+            set { _sum = value; }
+        }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using learn_xamarin.Navigation;
+using learn_xamarin.Utils;
 using Xamarin.Forms;
 
 namespace learn_xamarin
@@ -18,8 +20,8 @@ namespace learn_xamarin
 
         private void InstanceOnNavigationRequested(INavigationRequest navigationRequest)
         {
-            if (navigationRequest is PushCategoriesPage)
-                Navigation.PushAsync(new CategoriesPage());
+            if (navigationRequest is PushCategoriesPage) Navigation.PushAsync(new CategoriesPage());
+            else if (navigationRequest is PushMoneySpentSumPage) Navigation.PushAsync(new MoneySpentSumPage());
         }
     }
 }

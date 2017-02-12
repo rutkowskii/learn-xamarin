@@ -9,12 +9,12 @@ using Xamarin.Forms;
 
 namespace learn_xamarin
 {
-    public partial class WelcomePage : ContentPage
+    public partial class MoneySpentSumPage : ContentPage
     {
-        public WelcomePage()
+        public MoneySpentSumPage()
         {
             InitializeComponent();
-            BindingContext = Container.Instance.Get<WelcomeViewModel>();
+            BindingContext = Container.Instance.Get<MoneySpentSumViewModel>();
         }
     }
 }
