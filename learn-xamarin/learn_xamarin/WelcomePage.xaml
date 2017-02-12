@@ -4,7 +4,10 @@
              x:Class="learn_xamarin.WelcomePage">
   
 <StackLayout>
-    <Button Command="{Binding MoneySpentCommnand}" Text="MONIES SPENT" />
+  
+    <Label Text="{Binding SpentThisWeek}"></Label>
+    <Label Text="{Binding SpentToday}"></Label>
+    <Button Command="{Binding MoneySpentCommnand}" Text="MONEY SPENT" />
 </StackLayout>
 
 </ContentPage>
