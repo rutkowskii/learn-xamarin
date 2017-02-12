@@ -45,6 +45,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\Expenditure.cs" />
     <Compile Include="MoneySpentSumPage.xaml.cs">
       <DependentUpon>MoneySpentSumPage.xaml</DependentUpon>
     </Compile>
@@ -53,8 +55,14 @@
     <Compile Include="Navigation\NavigationService.cs" />
     <Compile Include="Navigation\PushCategoriesPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CategoriesDataService.cs" />
+    <Compile Include="Services\ExpendituresDataService.cs" />
+    <Compile Include="Services\ICategoriesDataService.cs" />
+    <Compile Include="Services\IExpendituresDataService.cs" />
     <Compile Include="Utils\Container.cs" />
     <Compile Include="Vm\CategoriesViewModel.cs" />
+    <Compile Include="Vm\MoneySpentDialogViewModel.cs" />
+    <Compile Include="Vm\MoneySpentSumViewModel.cs" />
     <Compile Include="Vm\WelcomeViewModel.cs" />
     <Compile Include="WelcomePage.xaml.cs">
       <DependentUpon>WelcomePage.xaml</DependentUpon>

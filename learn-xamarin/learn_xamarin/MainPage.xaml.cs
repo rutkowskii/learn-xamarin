@@ -20,8 +20,9 @@ namespace learn_xamarin
 
         private void InstanceOnNavigationRequested(INavigationRequest navigationRequest)
         {
-            if (navigationRequest is PushCategoriesPage) Navigation.PushAsync(new CategoriesPage());
-            else if (navigationRequest is PushMoneySpentSumPage) Navigation.PushAsync(new MoneySpentSumPage());
+            if (navigationRequest is PushCategoriesPage) Navigation.PushAsync(new CategoriesPage(), true);
+            else if (navigationRequest is PushMoneySpentSumPage) Navigation.PushAsync(new MoneySpentSumPage(), true);
+            else if (navigationRequest is BackToWelcomePage) Navigation.PopToRootAsync();
         }
     }
 }

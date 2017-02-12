@@ -1,4 +1,5 @@
-﻿using learn_xamarin.Utils;
+﻿using learn_xamarin.Model;
+using learn_xamarin.Utils;
 using learn_xamarin.Vm;
 using Xamarin.Forms;
 

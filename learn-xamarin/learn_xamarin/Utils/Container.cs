@@ -1,4 +1,5 @@
 using learn_xamarin.Navigation;
+using learn_xamarin.Services;
 using learn_xamarin.Vm;
 using Ninject;
 
@@ -15,6 +16,9 @@ namespace learn_xamarin.Utils
             _kernel = new StandardKernel();
             _kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
             _kernel.Bind<MoneySpentDialogViewModel>().To<MoneySpentDialogViewModel>().InSingletonScope();
+
+            _kernel.Bind<ICategoriesDataService>().To<CategoriesDataService>().InSingletonScope();
+            _kernel.Bind<IExpendituresDataService>().To<ExpendituresDataService>().InSingletonScope();
         }
 
         public T Get<T>()
