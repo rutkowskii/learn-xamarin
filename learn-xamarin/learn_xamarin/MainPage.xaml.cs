@@ -12,7 +12,8 @@ namespace learn_xamarin
         public MainPage()
         {
             InitializeComponent();
-            NavigationService.Instance.NavigationRequested += InstanceOnNavigationRequested;
+            var container = Container.Instance;
+            container.Get<INavigationService>().NavigationRequested += InstanceOnNavigationRequested;
         }
 
         private void InstanceOnNavigationRequested(INavigationRequest navigationRequest)

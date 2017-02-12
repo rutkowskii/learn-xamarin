@@ -1,4 +1,6 @@
 ﻿using System;
+using Ninject;
+using Ninject.Modules;
 using Xamarin.Forms;
 
 namespace learn_xamarin
@@ -30,7 +32,13 @@ namespace learn_xamarin
     }
 
 
-    public class NavigationService
+    public interface INavigationService
+    {
+        void Request(INavigationRequest pushCategoriesPage);
+        event Action<INavigationRequest> NavigationRequested;
+    }
+
+    public class NavigationService : INavigationService
     {
         private static NavigationService _instance;
 
@@ -50,4 +58,30 @@ namespace learn_xamarin
 
     public interface INavigationRequest { }
     public class PushCategoriesPage : INavigationRequest { }
+
+    public class Container
+    {
+        private static Container _instance;
+        public static Container Instance => _instance ?? (_instance = new Container());
+        private readonly StandardKernel _kernel;
+
+        public Container()
+        {
+            _kernel = new StandardKernel();
+            _kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
+        }
+
+        public T Get<T>()
+        {
+            return _kernel.Get<T>();
+        }
+    }
+
+    //public class MainModule : NinjectModule
+    //{
+    //    public override void Load()
+    //    {
+         
+    //    }
+    //}
 }

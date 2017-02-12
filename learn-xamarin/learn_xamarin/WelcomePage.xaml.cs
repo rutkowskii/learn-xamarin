@@ -13,7 +13,7 @@ namespace learn_xamarin
         public WelcomePage()
         {
             InitializeComponent();
-            BindingContext = new WelcomeViewModel();
+            BindingContext = Container.Instance.Get<WelcomeViewModel>();
         }
     }
 }
