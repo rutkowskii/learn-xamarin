@@ -45,8 +45,6 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\Expenditure.cs" />
     <Compile Include="MoneySpentSumPage.xaml.cs">
       <DependentUpon>MoneySpentSumPage.xaml</DependentUpon>
     </Compile>
@@ -136,6 +134,15 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\learn-xamarin.Model\learn-xamarin.Model.csproj">
+      <Project>{148cefdf-d7bf-4a02-b6bd-7da79dad9d42}</Project>
+      <Name>learn-xamarin.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />

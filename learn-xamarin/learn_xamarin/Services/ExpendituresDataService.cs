@@ -68,7 +68,7 @@ namespace learn_xamarin.Services
 
         private void HandleIncomingResponse(IAsyncResult ar)
         {
-            ar.
+            throw new NotImplementedException();
         }
     }
 }
