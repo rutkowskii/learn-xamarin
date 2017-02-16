@@ -3,6 +3,7 @@ using learn_xamarin.Services;
 using learn_xamarin.Storage;
 using learn_xamarin.Vm;
 using Ninject;
+using RestSharp.Portable.HttpClient;
 
 namespace learn_xamarin.Utils
 {
@@ -17,6 +18,8 @@ namespace learn_xamarin.Utils
             _kernel = new StandardKernel();
             _kernel.Bind<ILocalDatabase>().To<LocalDatabase>().InSingletonScope();
             _kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
+            _kernel.Bind<RestClient>().To<RestClient>().InSingletonScope();
+            _kernel.Bind<IDateTimeProvider>().To<DateTimeProvider>().InSingletonScope();
 
             _kernel.Bind<MoneySpentDialogViewModel>().To<MoneySpentDialogViewModel>().InSingletonScope();
 

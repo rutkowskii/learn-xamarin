@@ -5,6 +5,8 @@
   
 <StackLayout>
   
+    <Label Text="{Binding SpentOverall}"></Label>
+    <Label Text="{Binding SpentThisMonth}"></Label>
     <Label Text="{Binding SpentThisWeek}"></Label>
     <Label Text="{Binding SpentToday}"></Label>
     <Button Command="{Binding MoneySpentCommnand}" Text="MONEY SPENT" />
