@@ -8,17 +8,17 @@ namespace learn_xamarin.Sever
 {
     public class ExpendituresModule : NancyModule
     {
-        private readonly ExpendituresRepo _expendituresRepo;
+        private readonly ServerRepo _serverRepo;
 
-        public ExpendituresModule(ExpendituresRepo expendituresRepo)
+        public ExpendituresModule(ServerRepo serverRepo)
         {
-            _expendituresRepo = expendituresRepo;
+            _serverRepo = serverRepo;
             SetupRoutes();
         }
 
         private void SetupRoutes()
         {
-            Get[$"/{RestCallsConstants.Expenditure}"] = request => GetAllExpenditures(ResolveParams());
+            Get[$"/{RestCallsConstants.Expenditure}"] = _ => GetAllExpenditures(ResolveParams());
             Post[$"/{RestCallsConstants.Expenditure}"] = _ => AddExpenditure();
         }
 
@@ -43,7 +43,7 @@ namespace learn_xamarin.Sever
 
             var asJson = System.Text.Encoding.Default.GetString(buffer);
             var newExpenditure = JsonConvert.DeserializeObject<Expenditure>(asJson);
-            _expendituresRepo.Add(newExpenditure);
+            _serverRepo.Add(newExpenditure);
 
             Logger.Info($"About to insert new expenditure with sum {newExpenditure.Sum}");
 
@@ -55,23 +55,10 @@ namespace learn_xamarin.Sever
             if (queryParams == null)
             {
                 Logger.Info("About to download all existing expenditures");
-                return _expendituresRepo.GetAll();
+                return _serverRepo.GetAllExpenditures();
             }
             Logger.Info($"About to download expenditures not-older than {queryParams.IgnoreBelow}");
-            return _expendituresRepo.Get(queryParams);
-        }
-    }
-
-    public class ExpendituresQueryParams
-    {
-        public DateTime IgnoreBelow { get; set; }
-    }
-
-    public class Logger
-    {
-        public static void Info(string content)
-        {
-            Console.WriteLine(content);
+            return _serverRepo.Get(queryParams);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using learn_xamarin.Navigation;
 using learn_xamarin.Utils;
 using Xamarin.Forms;

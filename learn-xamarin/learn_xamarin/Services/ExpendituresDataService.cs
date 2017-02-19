@@ -44,12 +44,13 @@ namespace learn_xamarin.Services
 
         public async void TrySynchronize(Action<Expenditure[]> callback)
         {
+            var currentlyCashed = _localDatabase.GetAllExpenditures();
+
             if (!_connectionService.IsConnected)
             {
+                callback(currentlyCashed);
                 return;
             }
-
-            var currentlyCashed = _localDatabase.GetAllExpenditures();
 
             var task = _restConnection.Get(RestCallsConstants.Expenditure, ResolveParameters(currentlyCashed));
             await task;

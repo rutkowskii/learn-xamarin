@@ -71,8 +71,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CategoriesModule.cs" />
     <Compile Include="ExpendituresModule.cs" />
-    <Compile Include="ExpendituresRepo.cs" />
+    <Compile Include="ExpendituresQueryParams.cs" />
+    <Compile Include="ServerRepo.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MongoDb.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

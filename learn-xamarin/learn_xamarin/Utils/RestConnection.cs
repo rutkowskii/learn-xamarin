@@ -8,7 +8,7 @@ namespace learn_xamarin.Utils
 {
     public class RestConnection
     {
-        private RestClient _restClient;
+        private readonly RestClient _restClient;
 
         public RestConnection()
         {

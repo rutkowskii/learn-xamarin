@@ -4,18 +4,23 @@ using MongoDB.Driver;
 
 namespace learn_xamarin.Sever
 {
-    public class ExpendituresRepo
+    public class ServerRepo
     {
         private readonly MongoDb _mongoDb;
 
-        public ExpendituresRepo(MongoDb mongoDb)
+        public ServerRepo(MongoDb mongoDb)
         {
             _mongoDb = mongoDb;
         }        
 
-        public Expenditure[] GetAll()
+        public Expenditure[] GetAllExpenditures()
         {
             return _mongoDb.Expenditures.AsQueryable().ToArray();
+        }
+
+        public Category[] GetAllCategories()
+        {
+            return _mongoDb.Categories.AsQueryable().ToArray();
         }
 
         public void Add(Expenditure newExpenditure)
