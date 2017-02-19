@@ -8,19 +8,14 @@ using Newtonsoft.Json;
 
 namespace learn_xamarin.Services
 {
-    public class UnsynchronizedItem
-    {
-        public Guid Id { get; set; }
-    }
-
     class ExpendituresDataService : IExpendituresDataService
     {
         private readonly ILocalDatabase _localDatabase;
         private readonly RestConnection _restConnection;
         private readonly IConnectionService _connectionService;
 
-        public ExpendituresDataService(ILocalDatabase localDatabase, 
-            RestConnection restConnection, 
+        public ExpendituresDataService(ILocalDatabase localDatabase,
+            RestConnection restConnection,
             IConnectionService connectionService)
         {
             _localDatabase = localDatabase;
@@ -28,13 +23,12 @@ namespace learn_xamarin.Services
             _connectionService = connectionService;
         }
 
-        // todo store things in local db temporarily so we sync when we have the internet. 
-        public void Add(Expenditure expenditure) 
+        public void Add(Expenditure expenditure)
         {
             _localDatabase.Insert(expenditure);
             if (_connectionService.IsConnected)
             {
-                _restConnection.Post("expenditure", expenditure);
+                _restConnection.Post(RestCallsConstants.Expenditure, expenditure);
             }
             else
             {
@@ -57,7 +51,7 @@ namespace learn_xamarin.Services
 
             var currentlyCashed = _localDatabase.GetAllExpenditures();
 
-            var task = _restConnection.Get("expenditure", ResolveParameters(currentlyCashed));
+            var task = _restConnection.Get(RestCallsConstants.Expenditure, ResolveParameters(currentlyCashed));
             await task;
             var serverExpenditures = JsonConvert.DeserializeObject<Expenditure[]>(task.Result.Content);
 
@@ -68,7 +62,8 @@ namespace learn_xamarin.Services
             callback(expendituresMerged.ToArray());
         }
 
-        private List<Expenditure> SaveServerExpendituresLocally(Expenditure[] currentlyCashed, Expenditure[] serverExpenditures)
+        private List<Expenditure> SaveServerExpendituresLocally(Expenditure[] currentlyCashed,
+            Expenditure[] serverExpenditures)
         {
             var newExpenditures = FilterServerExpenditures(currentlyCashed, serverExpenditures);
 
@@ -87,12 +82,14 @@ namespace learn_xamarin.Services
             var unsynchronized = _localDatabase.GetAllUnsynchronizedItems();
             foreach (var unsynchronizedItem in unsynchronized)
             {
-                _restConnection.Post("expenditure", unsynchronizedItem);
+                var expenditure = _localDatabase.GetAllExpenditures().Single(e => e.Id == unsynchronizedItem.Id); //todo perf
+                _restConnection.Post(RestCallsConstants.Expenditure, expenditure);
             }
             _localDatabase.ClearUnsynchronizedItems();
         }
 
-        private IEnumerable<Expenditure> FilterServerExpenditures(Expenditure[] currentlyCashed, Expenditure[] serverExpenditures)
+        private IEnumerable<Expenditure> FilterServerExpenditures(Expenditure[] currentlyCashed,
+            Expenditure[] serverExpenditures)
         {
             var ids = new HashSet<Guid>(currentlyCashed.Select(e => e.Id));
             foreach (var serverExpenditure in serverExpenditures)
@@ -106,12 +103,16 @@ namespace learn_xamarin.Services
 
         private RequestParameter[] ResolveParameters(Expenditure[] currentlyCashed)
         {
-            if(!currentlyCashed.Any()) return new RequestParameter[0];
+            if (!currentlyCashed.Any()) return new RequestParameter[0];
             var timestamp = currentlyCashed.Max(e => e.Timestamp).AddDays(-1);
 
-            return new []
+            return new[]
             {
-                new RequestParameter {Key = "ignoreBelow", Value = timestamp.ToString("yyyy-MM-dd")}
+                new RequestParameter
+                {
+                    Key = RestCallsConstants.IgnoreBelow,
+                    Value = timestamp.ToString(RestCallsConstants.DateFormat)
+                }
             };
         }
     }

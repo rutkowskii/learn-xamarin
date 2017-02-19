@@ -1,5 +1,4 @@
 ﻿using learn_xamarin.Model;
-using learn_xamarin.Services;
 using SQLite;
 using Xamarin.Forms;
 
@@ -24,7 +23,7 @@ namespace learn_xamarin.Storage
             _sqliteConnection.Insert(e);
         }
 
-        private void InitiateSchemaIfNeeded() // todo tmp. 
+        private void InitiateSchemaIfNeeded()
         {
             RecreateTable<Expenditure>();
             RecreateTable<UnsynchronizedItem>();
@@ -32,11 +31,15 @@ namespace learn_xamarin.Storage
 
         private void RecreateTable<T>()
         {
-            if (CheckIfTableExists(nameof(T)))
+            //if (CheckIfTableExists(nameof(T)))
+            //{
+            //    _sqliteConnection.DropTable<T>();
+            //}
+            //_sqliteConnection.CreateTable<T>();
+            if (!CheckIfTableExists(nameof(T)))
             {
-                _sqliteConnection.DropTable<T>();
+                _sqliteConnection.CreateTable<T>();
             }
-            _sqliteConnection.CreateTable<T>();
         }
 
         private bool CheckIfTableExists(string name)

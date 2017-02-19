@@ -18,19 +18,19 @@ namespace learn_xamarin.Sever
 
         private void SetupRoutes()
         {
-            Get["/expenditure"] = request => GetAllExpenditures(ResolveParams());
-            Post["/expenditure"] = _ => AddExpenditure();
+            Get[$"/{RestCallsConstants.Expenditure}"] = request => GetAllExpenditures(ResolveParams());
+            Post[$"/{RestCallsConstants.Expenditure}"] = _ => AddExpenditure();
         }
 
         private ExpendituresQueryParams ResolveParams()
         {
-            var ignoreBelow = this.Request.Query["ignoreBelow"]; //todo common definitions in model?
+            var ignoreBelow = this.Request.Query[RestCallsConstants.IgnoreBelow];
             if (ignoreBelow == null) return null;
 
             var res = new ExpendituresQueryParams
             {
                 IgnoreBelow = DateTime.ParseExact(
-                    ignoreBelow, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                    ignoreBelow, RestCallsConstants.DateFormat, CultureInfo.InvariantCulture)
             };
             return res;
         }
