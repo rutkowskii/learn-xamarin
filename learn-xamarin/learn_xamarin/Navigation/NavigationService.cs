@@ -4,12 +4,20 @@ namespace learn_xamarin.Navigation
 {
     public class NavigationService : INavigationService
     {
-        private static NavigationService _instance;
-
-        public static NavigationService Instance
-        {
-            get { return _instance ?? (_instance = new NavigationService()); }
-        }
+        //private static NavigationService _instance;
+        //private Guid id = Guid.NewGuid(); //todo tmp
+        //private static  object monitor = new object();
+        //public static NavigationService Instance
+        //{
+        //    get
+        //    {
+        //        lock (monitor)
+        //        {
+        //            if (_instance != null) return _instance;
+        //            else return _instance = new NavigationService();
+        //        }
+        //    }
+        //}
 
         public void Request(INavigationRequest pushCategoriesPage)
         {

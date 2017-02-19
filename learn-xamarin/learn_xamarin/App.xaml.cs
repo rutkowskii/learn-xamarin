@@ -1,4 +1,6 @@
 ﻿using System;
+using learn_xamarin.Navigation;
+using learn_xamarin.Utils;
 using Ninject;
 using Ninject.Modules;
 using Xamarin.Forms;
@@ -10,9 +12,26 @@ namespace learn_xamarin
         public App()
         {
             InitializeComponent();
+           
+            var mainPage = new MainPage();
 
-            MainPage = new MainPage();
-            ((NavigationPage) MainPage).PushAsync(new WelcomePage());
+            mainPage.Detail = new MyNavigationPage();
+            var mainMenuPage = new MainMenuPage();
+            mainMenuPage.MenuItems.ItemSelected += onMainMenuItemSelected;
+
+            mainPage.Master = mainMenuPage;
+
+            MainPage = mainPage;
+            ((NavigationPage)mainPage.Detail).PushAsync(new WelcomePage());
+        }
+
+        private void onMainMenuItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
+        {
+            var itemSelected = selectedItemChangedEventArgs.SelectedItem as MainMenuItem;
+            //NavigationService.Instance.Request(itemSelected.NavigationRequest);
+            Container.Instance.Get<INavigationService>().Request(itemSelected.NavigationRequest);
+            //NavigationService.Instance.Request(itemSelected.NavigationRequest);
+            ((MainPage) MainPage).Hide();
         }
 
         protected override void OnStart()

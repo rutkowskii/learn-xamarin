@@ -8,16 +8,11 @@ using Xamarin.Forms;
 
 namespace learn_xamarin
 {
-    public partial class MainPage : MasterDetailPage
+    public partial class CategoriesSummaryPage : ContentPage
     {
-        public MainPage()
+        public CategoriesSummaryPage()
         {
             InitializeComponent();
-        }
-
-        public void Hide()
-        {
-            IsPresented = false;
         }
     }
 }
