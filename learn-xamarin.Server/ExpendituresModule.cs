@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using learn_xamarin.Model;
 using Nancy;
 using Newtonsoft.Json;
@@ -16,8 +18,21 @@ namespace learn_xamarin.Sever
 
         private void SetupRoutes()
         {
-            Get["/expenditure"] = _ => GetAllExpenditures();
+            Get["/expenditure"] = request => GetAllExpenditures(ResolveParams());
             Post["/expenditure"] = _ => AddExpenditure();
+        }
+
+        private ExpendituresQueryParams ResolveParams()
+        {
+            var ignoreBelow = this.Request.Query["ignoreBelow"]; //todo common definitions in model?
+            if (ignoreBelow == null) return null;
+
+            var res = new ExpendituresQueryParams
+            {
+                IgnoreBelow = DateTime.ParseExact(
+                    ignoreBelow, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+            };
+            return res;
         }
 
         private object AddExpenditure()
@@ -29,12 +44,34 @@ namespace learn_xamarin.Sever
             var asJson = System.Text.Encoding.Default.GetString(buffer);
             var newExpenditure = JsonConvert.DeserializeObject<Expenditure>(asJson);
             _expendituresRepo.Add(newExpenditure);
+
+            Logger.Info($"About to insert new expenditure with sum {newExpenditure.Sum}");
+
             return new object();
         }
 
-        private Expenditure[] GetAllExpenditures()
+        private Expenditure[] GetAllExpenditures(ExpendituresQueryParams queryParams)
         {
-            return _expendituresRepo.GetAll();
+            if (queryParams == null)
+            {
+                Logger.Info("About to download all existing expenditures");
+                return _expendituresRepo.GetAll();
+            }
+            Logger.Info($"About to download expenditures not-older than {queryParams.IgnoreBelow}");
+            return _expendituresRepo.Get(queryParams);
+        }
+    }
+
+    public class ExpendituresQueryParams
+    {
+        public DateTime IgnoreBelow { get; set; }
+    }
+
+    public class Logger
+    {
+        public static void Info(string content)
+        {
+            Console.WriteLine(content);
         }
     }
 }

@@ -20,6 +20,7 @@ namespace learn_xamarin.Vm
         private string _spentOverall;
         private string _spentThisMonth;
         private string _spentToday;
+        private string _lastExpenditures;
 
         public WelcomeViewModel(INavigationService navigationService, 
             IExpendituresDataService expendituresDataService,
@@ -37,6 +38,16 @@ namespace learn_xamarin.Vm
         }
 
         public ICommand MoneySpentCommnand { get; private set; }
+
+        public string LastExpenditures
+        {
+            get { return _lastExpenditures; }
+            set
+            {
+                _lastExpenditures = value;
+                OnPropertyChanged(nameof(LastExpenditures));
+            }
+        }
 
         public string SpentOverall
         {
@@ -80,7 +91,7 @@ namespace learn_xamarin.Vm
 
         public void RefreshSummaryInfos()
         {
-            _expendituresDataService.GetAll(Callback);
+            _expendituresDataService.TrySynchronize(Callback);
         }
 
         private void Callback(Expenditure[] allExpenditures)
@@ -102,6 +113,15 @@ namespace learn_xamarin.Vm
             SpentThisWeek = $"Spent {sumThisWeek} this week";
             SpentThisMonth = $"Spent {sumThisMonth} this month";
             SpentOverall = $"Spent {sumOverall} overall";
+
+            var tmp = allExpenditures
+                .OrderByDescending(e => e.Timestamp)
+                .Take(3);
+            var dts = tmp.Select(e => e.Timestamp).ToArray();
+            LastExpenditures = string.Join(", ",
+                tmp
+                    .Select(e => $"{e.Timestamp} Spent {e.Sum}")
+                    .ToArray());
         }
 
         public DateTime MonthStart(DateTime dt)

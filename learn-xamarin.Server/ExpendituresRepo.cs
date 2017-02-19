@@ -22,5 +22,12 @@ namespace learn_xamarin.Sever
         {
             _mongoDb.Expenditures.InsertOne(newExpenditure);
         }
+
+        public Expenditure[] Get(ExpendituresQueryParams queryParams)
+        {
+            return _mongoDb.Expenditures.AsQueryable()
+                .Where(e => e.Timestamp >= queryParams.IgnoreBelow)
+                .ToArray();
+        }
     }
 }

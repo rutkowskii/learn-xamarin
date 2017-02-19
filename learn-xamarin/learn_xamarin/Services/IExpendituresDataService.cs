@@ -6,6 +6,6 @@ namespace learn_xamarin.Services
     public interface IExpendituresDataService
     {
         void Add(Expenditure expenditure);
-        void GetAll(Action<Expenditure[]> callback);
+        void TrySynchronize(Action<Expenditure[]> callback);
     }
 }

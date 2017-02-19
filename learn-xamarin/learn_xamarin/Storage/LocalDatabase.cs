@@ -1,4 +1,5 @@
 ﻿using learn_xamarin.Model;
+using learn_xamarin.Services;
 using SQLite;
 using Xamarin.Forms;
 
@@ -23,13 +24,19 @@ namespace learn_xamarin.Storage
             _sqliteConnection.Insert(e);
         }
 
-        private void InitiateSchemaIfNeeded()
+        private void InitiateSchemaIfNeeded() // todo tmp. 
         {
-            if (CheckIfTableExists(nameof(Expenditure)))
+            RecreateTable<Expenditure>();
+            RecreateTable<UnsynchronizedItem>();
+        }
+
+        private void RecreateTable<T>()
+        {
+            if (CheckIfTableExists(nameof(T)))
             {
-                _sqliteConnection.DropTable<Expenditure>();
+                _sqliteConnection.DropTable<T>();
             }
-            _sqliteConnection.CreateTable<Expenditure>();
+            _sqliteConnection.CreateTable<T>();
         }
 
         private bool CheckIfTableExists(string name)
@@ -42,6 +49,21 @@ namespace learn_xamarin.Storage
         public Expenditure[] GetAllExpenditures()
         {
             return _sqliteConnection.Query<Expenditure>($"select * from {nameof(Expenditure)}").ToArray();
+        }
+
+        public UnsynchronizedItem[] GetAllUnsynchronizedItems()
+        {
+            return _sqliteConnection.Query<UnsynchronizedItem>($"select * from {nameof(UnsynchronizedItem)}").ToArray();
+        }
+
+        public void ClearUnsynchronizedItems()
+        {
+            _sqliteConnection.DeleteAll<UnsynchronizedItem>();
+        }
+
+        public void Insert(UnsynchronizedItem unsynchronizedItem)
+        {
+            _sqliteConnection.Insert(unsynchronizedItem);
         }
     }
 }
