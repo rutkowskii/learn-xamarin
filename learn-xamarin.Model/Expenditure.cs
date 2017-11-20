@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace learn_xamarin.Model
 {
@@ -10,6 +11,8 @@ namespace learn_xamarin.Model
         public DateTime Timestamp { get; set; }
     }
 
+
+
     public class RestCallsConstants
     {
         public const string IgnoreBelow = "ignoreBelow";
@@ -17,4 +20,16 @@ namespace learn_xamarin.Model
         public const string Expenditure = "expenditure";
         public const string Category = "category";
     }
+
+    public static class EnumerableExtensions
+    {
+        public static void Foreach<T>(this IEnumerable<T> collection, Action<T> a)
+        {
+            foreach(var item in collection)
+            {
+                a(item);
+            }
+        }
+    }
+
 }

@@ -12,5 +12,6 @@
       <Button Text="I confirm the sum" 
               IsEnabled="{Binding Source={x:Reference sumValidator}, Path=IsValid}" 
               Command="{Binding ConfirmationCommand}"></Button>
+
   </StackLayout>
 </ContentPage>

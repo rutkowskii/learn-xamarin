@@ -6,6 +6,6 @@ namespace learn_xamarin.Services
 {
     public interface ICategoriesDataService
     {
-        Category[] GetAll(); //todo tmp, we need generic async approach. 
+        Task<Category[]> GetAll();
     }
 }

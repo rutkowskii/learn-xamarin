@@ -1,7 +1,9 @@
+using System;
 using System.Collections.ObjectModel;
 using learn_xamarin.Model;
 using learn_xamarin.Navigation;
 using learn_xamarin.Services;
+using System.Linq;
 
 namespace learn_xamarin.Vm
 {
@@ -18,10 +20,18 @@ namespace learn_xamarin.Vm
             _categoriesDataService = categoriesDataService;
             _moneySpentDialogViewModel = moneySpentDialogViewModel;
             _navigationService = navigationService;
-            Categories = new ObservableCollection<Category>(_categoriesDataService.GetAll());
         }
 
-        public ObservableCollection<Category> Categories { get; private set; }
+        private ObservableCollection<Category> _categories;
+        public ObservableCollection<Category> Categories
+        {
+            get
+            {
+                LoadCategoriesIfNeeded();
+                return _categories;
+            }
+            private set { _categories = value; }
+        }
 
         public Category CategorySelected
         {
@@ -33,6 +43,14 @@ namespace learn_xamarin.Vm
                 _moneySpentDialogViewModel.CategorySelected = value;
                 _navigationService.Request(new PushMoneySpentSumPage());
             }
+        }
+
+        private async void LoadCategoriesIfNeeded()
+        {
+            if (_categories != null) return;
+            _categories = new ObservableCollection<Category>();
+            var categories = await _categoriesDataService.GetAll();
+            categories.Foreach(x => _categories.Add(x));
         }
     }
 }

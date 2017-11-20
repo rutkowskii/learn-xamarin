@@ -13,6 +13,7 @@ namespace learn_xamarin
     {
         public MoneySpentSumPage()
         {
+            System.Diagnostics.Debug.WriteLine($"we inside moneyspentsumpage ctor!!!!!!!!!!!!!!!!!");
             InitializeComponent();
             BindingContext = Container.Instance.Get<MoneySpentSumViewModel>();
         }

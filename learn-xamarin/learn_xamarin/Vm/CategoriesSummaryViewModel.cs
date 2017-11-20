@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using learn_xamarin.Model;
 using learn_xamarin.Services;
 using learn_xamarin.Storage;
+using System;
 
 namespace learn_xamarin.Vm
 {
@@ -43,19 +44,23 @@ namespace learn_xamarin.Vm
 
         private void ExpendituresSynchronizationCallback(Expenditure[] expenditures)
         {
-            var summaries = new List<CategorySummary>();
-            var loadCategoriesTask = _categoriesDataService.GetAll();
-            var categoriesByIds = loadCategoriesTask.ToDictionary(c => c.Id, c => c);
-            foreach (var group in expenditures.GroupBy(e => e.CategoryId))
-            {
-                var summary = new CategorySummary
-                {
-                    CategoryName = categoriesByIds[group.Key].Name,
-                    SumSpent = group.Sum(e => e.Sum)
-                };
-                summaries.Add(summary);
-            }
-            CategorySummaries = summaries;
+            throw new NotImplementedException();
+
+            //todo piotr tmp
+
+            //var summaries = new List<CategorySummary>();
+            //var loadCategoriesTask = _categoriesDataService.GetAll();
+            //var categoriesByIds = loadCategoriesTask.ToDictionary(c => c.Id, c => c);
+            //foreach (var group in expenditures.GroupBy(e => e.CategoryId))
+            //{
+            //    var summary = new CategorySummary
+            //    {
+            //        CategoryName = categoriesByIds[group.Key].Name,
+            //        SumSpent = group.Sum(e => e.Sum)
+            //    };
+            //    summaries.Add(summary);
+            //}
+            //CategorySummaries = summaries;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace learn_xamarin.Services
 {
-    public class CategoriesDataService : ICategoriesDataService
+    public class CategoriesDataService : ICategoriesDataService //todo piotr name 
     {
         private readonly RestConnection _restConnection;
 
@@ -16,7 +16,7 @@ namespace learn_xamarin.Services
             _restConnection = restConnection;
         }
 
-        public Category[] GetAll()
+        public async Task<Category[]> GetAll()
         {
             //return new[] //todo get from the backend!!
             //{
@@ -29,8 +29,9 @@ namespace learn_xamarin.Services
             //todo how to store it?
 
             var task = _restConnection.Get(RestCallsConstants.Category);
-            task.Wait();
-            return JsonConvert.DeserializeObject<Category[]>(task.Result.Content);
+            var rawResult = await task;
+            System.Diagnostics.Debug.WriteLine($"HTTP CALL RETURNING, Status: {rawResult.StatusCode}, Desc: {rawResult.StatusDescription} ");
+            return JsonConvert.DeserializeObject<Category[]>(rawResult.Content);
         }
     }
 }

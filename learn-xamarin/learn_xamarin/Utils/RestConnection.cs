@@ -44,7 +44,7 @@ namespace learn_xamarin.Utils
 
         private RestClient GetClient()
         {
-            return new RestClient("http://10.0.2.2:19666/");
+            return new RestClient("http://192.168.0.26:19666/");
         }
     }
 
