@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace learn_xamarin.Behaviors
 {
@@ -44,8 +38,6 @@ namespace learn_xamarin.Behaviors
         protected override void OnDetachingFrom(Entry bindable)
         {
             bindable.TextChanged -= HandleTextChanged;
-
         }
-
     }
 }

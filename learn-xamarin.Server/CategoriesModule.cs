@@ -20,7 +20,9 @@ namespace learn_xamarin.Sever
 
         private object GetAllCategories()
         {
-            return _serverRepo.GetAllCategories();
+            var res = _serverRepo.GetAllCategories();
+            Logger.Debug($"Client asked about categories, returning {res.Length} items");
+            return res;
         }
     }
 }

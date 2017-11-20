@@ -4,7 +4,7 @@
              xmlns:behaviors="clr-namespace:learn_xamarin.Behaviors;assembly=learn_xamarin"
              x:Class="learn_xamarin.MoneySpentSumPage">
   <StackLayout>
-    <Entry Keyboard="Numeric" Placeholder="Enter the sum" PlaceholderColor="Gray" Text="{Binding Sum}">
+    <Entry Keyboard="Numeric" Placeholder="Enter the sum" PlaceholderColor="Gray" Text="{Binding Sum}" x:Name="sumEntry">
       <Entry.Behaviors>
         <behaviors:MoneySpentSumValidationBehavior x:Name="sumValidator" />
       </Entry.Behaviors>

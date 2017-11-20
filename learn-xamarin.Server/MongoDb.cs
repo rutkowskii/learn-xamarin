@@ -7,7 +7,7 @@ namespace learn_xamarin.Sever
     {
         private static IMongoDatabase _db;
 
-        private static IMongoDatabase Instance
+        public static IMongoDatabase Instance
         {
             get
             {
@@ -15,7 +15,7 @@ namespace learn_xamarin.Sever
                 {
                     var connectionString = "mongodb://localhost:27017";
                     var mongoClient = new MongoClient(connectionString);
-                    _db = mongoClient.GetDatabase("expenditures");
+                    _db = mongoClient.GetDatabase("exp2");
                 }
                 return _db;
             }

@@ -8,5 +8,10 @@ namespace learn_xamarin.Sever
         {
             Console.WriteLine(content);
         }
+
+        public static void Debug(string content)
+        {
+            Console.WriteLine(content);
+        }
     }
 }

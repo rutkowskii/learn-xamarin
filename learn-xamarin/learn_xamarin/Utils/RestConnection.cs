@@ -8,6 +8,8 @@ namespace learn_xamarin.Utils
 {
     public class RestConnection
     {
+        private readonly string machineAddress = "192.168.0.26";
+        private readonly int portNr = 19666;
         private readonly RestClient _restClient;
 
         public RestConnection()
@@ -44,7 +46,7 @@ namespace learn_xamarin.Utils
 
         private RestClient GetClient()
         {
-            return new RestClient("http://192.168.0.26:19666/");
+            return new RestClient($"http://{machineAddress}:{portNr}/");
         }
     }
 
