@@ -13,7 +13,7 @@ namespace learn_xamarin.Utils
         public static Container Instance => _instance ?? (_instance = new Container());
         private readonly StandardKernel _kernel;
 
-        public Container()
+        private Container()
         {
             _kernel = new StandardKernel();
             _kernel.Bind<ILocalDatabase>().To<LocalDatabase>().InSingletonScope();

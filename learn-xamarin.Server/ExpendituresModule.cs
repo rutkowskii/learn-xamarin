@@ -4,7 +4,7 @@ using learn_xamarin.Model;
 using Nancy;
 using Newtonsoft.Json;
 
-namespace learn_xamarin.Sever
+namespace learn_xamarin.Server
 {
     public class ExpendituresModule : NancyModule
     {

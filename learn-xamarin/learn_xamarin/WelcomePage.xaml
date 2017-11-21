@@ -4,7 +4,6 @@
              x:Class="learn_xamarin.WelcomePage">
   
 <StackLayout>
-    <Label Foreground="Green" Text />
     <Button Command="{Binding MoneySpentCommnand}" Text="MONEY SPENT" />
 </StackLayout>
 

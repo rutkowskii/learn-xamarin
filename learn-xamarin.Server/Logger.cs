@@ -1,6 +1,6 @@
 using System;
 
-namespace learn_xamarin.Sever
+namespace learn_xamarin.Server
 {
     public static class Logger
     {

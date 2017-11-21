@@ -8,9 +8,9 @@ using Xamarin.Forms;
 
 namespace learn_xamarin
 {
-    public partial class CategoriesSummaryPage : ContentPage
+    public partial class SettingsPage : ContentPage
     {
-        public CategoriesSummaryPage()
+        public SettingsPage()
         {
             InitializeComponent();
         }

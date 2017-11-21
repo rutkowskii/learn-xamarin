@@ -6,4 +6,5 @@ namespace learn_xamarin.Navigation
 
     public class MainMenuWelcome : INavigationRequest { }
     public class MainMenuCategories : INavigationRequest { }
+    public class MainMenuSettings : INavigationRequest { }
 }

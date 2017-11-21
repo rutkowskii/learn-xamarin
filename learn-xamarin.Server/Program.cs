@@ -1,9 +1,9 @@
 ﻿using System;
-using Nancy.Hosting.Self;
-using learn_xamarin.Model;
 using System.Linq;
+using learn_xamarin.Model;
+using Nancy.Hosting.Self;
 
-namespace learn_xamarin.Sever
+namespace learn_xamarin.Server
 {
     class Program
     {

@@ -25,7 +25,7 @@ namespace learn_xamarin.Services
 
         public void Add(Expenditure expenditure)
         {
-            _localDatabase.Insert(expenditure);
+            //_localDatabase.Insert(expenditure);
             if (_connectionService.IsConnected)
             {
                 _restConnection.Post(RestCallsConstants.Expenditure, expenditure);
@@ -72,7 +72,7 @@ namespace learn_xamarin.Services
 
             foreach (var newExpenditure in newExpenditures)
             {
-                _localDatabase.Insert(newExpenditure);
+                //_localDatabase.Insert(newExpenditure); todo piotr review it completely 
                 expendituresMerged.Add(newExpenditure);
             }
             return expendituresMerged;

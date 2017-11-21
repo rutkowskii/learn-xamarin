@@ -2,7 +2,7 @@
 using learn_xamarin.Model;
 using MongoDB.Driver;
 
-namespace learn_xamarin.Sever
+namespace learn_xamarin.Server
 {
     public class ServerRepo
     {

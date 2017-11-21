@@ -21,46 +21,21 @@ namespace learn_xamarin.Vm
         {
             _categoriesDataService = categoriesDataService;
             _expendituresDataService = expendituresDataService;
+            CategorySummaries = new CategorySummary[0];
         }
 
         public IEnumerable<CategorySummary> CategorySummaries
         {
             get
             {
-                if(_categorySummaries == null) LoadCategories();
+             //   if(_categorySummaries == null) LoadCategories();
                 return _categorySummaries;
             }
             set
             {
                 _categorySummaries = value;
-                OnPropertyChanged(nameof(CategorySummaries));
+               // OnPropertyChanged(nameof(CategorySummaries));
             }
-        }
-
-        private void LoadCategories()
-        {
-            _expendituresDataService.TrySynchronize(ExpendituresSynchronizationCallback);
-        }
-
-        private void ExpendituresSynchronizationCallback(Expenditure[] expenditures)
-        {
-            throw new NotImplementedException();
-
-            //todo piotr tmp
-
-            //var summaries = new List<CategorySummary>();
-            //var loadCategoriesTask = _categoriesDataService.GetAll();
-            //var categoriesByIds = loadCategoriesTask.ToDictionary(c => c.Id, c => c);
-            //foreach (var group in expenditures.GroupBy(e => e.CategoryId))
-            //{
-            //    var summary = new CategorySummary
-            //    {
-            //        CategoryName = categoriesByIds[group.Key].Name,
-            //        SumSpent = group.Sum(e => e.Sum)
-            //    };
-            //    summaries.Add(summary);
-            //}
-            //CategorySummaries = summaries;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

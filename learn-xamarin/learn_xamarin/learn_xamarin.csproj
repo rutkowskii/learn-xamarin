@@ -42,7 +42,10 @@
     <Compile Include="CategoriesPage.xaml.cs">
       <DependentUpon>CategoriesPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CategoriesSummaryPage.xaml.cs">
+    <Compile Include="SettingsPage.xaml.cs">
+      <DependentUpon>CategoriesSummaryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>CategoriesSummaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
@@ -93,6 +96,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -124,6 +131,10 @@
     <ProjectReference Include="..\..\learn-xamarin.Model\learn-xamarin.Model.csproj">
       <Project>{148cefdf-d7bf-4a02-b6bd-7da79dad9d42}</Project>
       <Name>learn-xamarin.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\learn-xamarin.Utils\learn-xamarin.Utils.csproj">
+      <Project>{3fb914a5-ec64-45b7-929b-1be9b703db79}</Project>
+      <Name>learn-xamarin.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

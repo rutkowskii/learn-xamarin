@@ -1,7 +1,7 @@
 using learn_xamarin.Model;
 using Nancy;
 
-namespace learn_xamarin.Sever
+namespace learn_xamarin.Server
 {
     public class CategoriesModule : NancyModule
     {

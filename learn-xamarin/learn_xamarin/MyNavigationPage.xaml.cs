@@ -19,13 +19,12 @@ namespace learn_xamarin
 
         private void InstanceOnNavigationRequested(INavigationRequest navigationRequest)
         {
-            System.Diagnostics.Debug.WriteLine($"Hey, we inside on navigation requested, type is {navigationRequest.GetType().FullName}");
-
             if (navigationRequest is PushCategoriesPage) Navigation.PushAsync(new CategoriesPage(), true);
             else if (navigationRequest is PushMoneySpentSumPage) Navigation.PushAsync(new MoneySpentSumPage(), true);
             else if (navigationRequest is BackToWelcomePage) Navigation.PopToRootAsync();
             else if (navigationRequest is MainMenuWelcome) ReplaceRoot(new WelcomePage());
             else if (navigationRequest is MainMenuCategories) ReplaceRoot(new CategoriesSummaryPage());
+            else if (navigationRequest is MainMenuSettings) ReplaceRoot(new CategoriesSummaryPage());
         }
 
         async Task ReplaceRoot<TPage>(TPage page) where TPage : Page
