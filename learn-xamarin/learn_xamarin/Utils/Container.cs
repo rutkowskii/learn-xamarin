@@ -17,6 +17,7 @@ namespace learn_xamarin.Utils
         {
             _kernel = new StandardKernel();
             _kernel.Bind<ILocalDatabase>().To<LocalDatabase>().InSingletonScope();
+            _kernel.Bind<ISettingsRepo>().To<SettingsRepo>().InSingletonScope();
             _kernel.Bind<IConnectionService>().To<ConnectionService>().InSingletonScope();
             _kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
             _kernel.Bind<RestClient>().To<RestClient>().InSingletonScope();
@@ -26,7 +27,6 @@ namespace learn_xamarin.Utils
 
             _kernel.Bind<ICategoriesDataService>().To<CategoriesDataService>().InSingletonScope();
             _kernel.Bind<IExpendituresDataService>().To<ExpendituresDataService>().InSingletonScope();
-           
         }
 
         public T Get<T>()

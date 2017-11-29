@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace learn_xamarin.Model
 {
@@ -11,6 +12,12 @@ namespace learn_xamarin.Model
             {
                 a(item);
             }
+        }
+
+        public static T FirstOrDefault<T>(this IEnumerable<T> collection, Func<T, bool> predicate, T defaultValue) where T : class
+        {
+            var result = collection.FirstOrDefault(predicate);
+            return result ?? defaultValue;
         }
     }
 }

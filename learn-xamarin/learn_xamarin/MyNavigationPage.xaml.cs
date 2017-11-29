@@ -24,7 +24,7 @@ namespace learn_xamarin
             else if (navigationRequest is BackToWelcomePage) Navigation.PopToRootAsync();
             else if (navigationRequest is MainMenuWelcome) ReplaceRoot(new WelcomePage());
             else if (navigationRequest is MainMenuCategories) ReplaceRoot(new CategoriesSummaryPage());
-            else if (navigationRequest is MainMenuSettings) ReplaceRoot(new CategoriesSummaryPage());
+            else if (navigationRequest is MainMenuSettings) ReplaceRoot(new SettingsPage());
         }
 
         async Task ReplaceRoot<TPage>(TPage page) where TPage : Page

@@ -1,17 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:learn_xamarin.Behaviors;assembly=learn_xamarin"
              x:Class="learn_xamarin.MoneySpentSumPage">
-  <StackLayout>
-    <Entry Keyboard="Numeric" Placeholder="Enter the sum" PlaceholderColor="Gray" Text="{Binding Sum}" x:Name="sumEntry">
-      <Entry.Behaviors>
-        <behaviors:MoneySpentSumValidationBehavior x:Name="sumValidator" />
-      </Entry.Behaviors>
-    </Entry>
-      <Button Text="I confirm the sum" 
-              IsEnabled="{Binding Source={x:Reference sumValidator}, Path=IsValid}" 
-              Command="{Binding ConfirmationCommand}"></Button>
+    <StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Entry Keyboard="Numeric" Placeholder="Enter the sum" PlaceholderColor="Gray" Text="{Binding Sum}" x:Name="sumEntry">
+                <Entry.Behaviors>
+                    <behaviors:MoneySpentSumValidationBehavior x:Name="sumValidator" />
+                </Entry.Behaviors>
+            </Entry>
+            <Label Text="{Binding CurrentCurrencyCode}" VerticalTextAlignment="Center" />
+        </StackLayout>
+        <Button Text="I confirm the sum"
+                IsEnabled="{Binding Source={x:Reference sumValidator}, Path=IsValid}"
+                Command="{Binding ConfirmationCommand}" />
 
-  </StackLayout>
+    </StackLayout>
 </ContentPage>

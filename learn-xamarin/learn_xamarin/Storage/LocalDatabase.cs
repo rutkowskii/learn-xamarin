@@ -1,5 +1,4 @@
-﻿using System;
-using learn_xamarin.Model;
+﻿using learn_xamarin.Model;
 using SQLite;
 using Xamarin.Forms;
 
@@ -29,6 +28,20 @@ namespace learn_xamarin.Storage
             return _sqliteConnection.Query<UnsynchronizedItem>($"select * from {nameof(UnsynchronizedItem)}").ToArray();
         }
 
+        public ConfigEntry[] GetAllConfigEntries()
+        {
+            return _sqliteConnection.Query<ConfigEntry>($"select * from {nameof(ConfigEntry)}").ToArray();
+        }
+
+        public void UpdateConfig(ConfigEntry newValue)
+        {
+            _sqliteConnection.Execute($"update {nameof(ConfigEntry)} " +
+                                      $"set {nameof(ConfigEntry.Value)} = ?" +
+                                      $"where {nameof(ConfigEntry.Key)} = ?", newValue.Value, newValue.Key);
+
+            // todo later, (when having a separate data definitions for sqlite?) use update   
+        }
+
         public void ClearUnsynchronizedItems()
         {
             _sqliteConnection.DeleteAll<UnsynchronizedItem>();
@@ -52,6 +65,7 @@ namespace learn_xamarin.Storage
             RecreateTable<Expenditure>();
             RecreateTable<Category>();
             RecreateTable<UnsynchronizedItem>();
+            RecreateTable<ConfigEntry>();
         }
 
         private void RecreateTable<T>()

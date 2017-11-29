@@ -8,7 +8,8 @@ namespace learn_xamarin.Utils
 {
     public class RestConnection
     {
-        private readonly string machineAddress = "192.168.0.26";
+//        private readonly string machineAddress = "192.168.0.26";
+        private readonly string machineAddress = "192.168.0.10";
         private readonly int portNr = 19666;
         private readonly RestClient _restClient;
 
@@ -17,7 +18,7 @@ namespace learn_xamarin.Utils
             _restClient = GetClient();
         }
 
-        public Task<IRestResponse> Get(string uri)
+        public Task<IRestResponse> Get(string uri) // todo piotr you're not handling the connection failures :(
         {
             return Get(uri, Enumerable.Empty<RequestParameter>());
         }

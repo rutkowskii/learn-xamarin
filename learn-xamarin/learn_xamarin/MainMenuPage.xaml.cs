@@ -20,9 +20,7 @@ namespace learn_xamarin
         {
             yield return new MainMenuItem {Title = "Home", NavigationRequest = new MainMenuWelcome()};
             yield return new MainMenuItem {Title = "Categories", NavigationRequest = new MainMenuCategories()};
-            // todo piotr add settings page here., 
-            // in the settings page: main currency and current currency 
-            // also store them in the local storage 
+            yield return new MainMenuItem {Title = "Settings", NavigationRequest = new MainMenuSettings()};
         }
     }
 

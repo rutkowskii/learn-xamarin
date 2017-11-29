@@ -1,7 +1,5 @@
 using System;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using learn_xamarin.Model;
 using learn_xamarin.Navigation;
@@ -11,7 +9,7 @@ using Xamarin.Forms;
 
 namespace learn_xamarin.Vm
 {
-    public class WelcomeViewModel : INotifyPropertyChanged
+    public class WelcomeViewModel : ObservableObject
     {
         private readonly INavigationService _navigationService;
         private readonly IExpendituresDataService _expendituresDataService;
@@ -138,13 +136,6 @@ namespace learn_xamarin.Vm
                     return i.Date;
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

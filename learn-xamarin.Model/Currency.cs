@@ -11,21 +11,29 @@ namespace learn_xamarin.Model
         public abstract string Code { get; }
         public abstract string Name { get; }
 
-        public static Currency[] All => new Currency[] { new Pln(), new Gbp(), new Eur() };
+        public static Currency[] All => new[] { Pln, Gbp, Eur };
+        public static readonly Currency Pln = new PlnCurrency();
+        public static readonly Currency Gbp = new GbpCurrency();
+        public static readonly Currency Eur = new EurCurrency();
 
-        private class Pln : Currency
+        public static Currency FromCodeString(string code)
+        {
+            return All.First(c => c.Code == code);
+        }
+
+        private class PlnCurrency : Currency
         {
             public override string Code => "PLN";
             public override string Name => "Polish Złoty";
         }
 
-        private class Gbp : Currency
+        private class GbpCurrency : Currency
         {
             public override string Code => "GBP";
             public override string Name => "British Pound";
         }
 
-        private class Eur : Currency
+        private class EurCurrency : Currency
         {
             public override string Code => "EUR";
             public override string Name => "Euro";

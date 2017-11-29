@@ -42,12 +42,6 @@
     <Compile Include="CategoriesPage.xaml.cs">
       <DependentUpon>CategoriesPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsPage.xaml.cs">
-      <DependentUpon>CategoriesSummaryPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsPage.xaml.cs">
-      <DependentUpon>CategoriesSummaryPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -69,9 +63,18 @@
     <Compile Include="Services\ExpendituresDataService.cs" />
     <Compile Include="Services\ICategoriesDataService.cs" />
     <Compile Include="Services\IExpendituresDataService.cs" />
+    <Compile Include="CategoriesSummaryPage.xaml.cs">
+      <DependentUpon>CategoriesSummaryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Storage\IFileHelper.cs" />
     <Compile Include="Storage\ILocalDatabase.cs" />
+    <Compile Include="Storage\ISettingsRepo.cs" />
     <Compile Include="Storage\LocalDatabase.cs" />
+    <Compile Include="Storage\SettingsKeys.cs" />
+    <Compile Include="Storage\SettingsRepo.cs" />
     <Compile Include="Utils\ConnectionService.cs" />
     <Compile Include="Utils\Container.cs" />
     <Compile Include="Utils\DateTimeProvider.cs" />
@@ -82,6 +85,8 @@
     <Compile Include="Vm\CategoriesViewModel.cs" />
     <Compile Include="Vm\MoneySpentDialogViewModel.cs" />
     <Compile Include="Vm\MoneySpentSumViewModel.cs" />
+    <Compile Include="Vm\ObservableObject.cs" />
+    <Compile Include="Vm\SettingsViewModel.cs" />
     <Compile Include="Vm\WelcomeViewModel.cs" />
     <Compile Include="WelcomePage.xaml.cs">
       <DependentUpon>WelcomePage.xaml</DependentUpon>
@@ -131,10 +136,6 @@
     <ProjectReference Include="..\..\learn-xamarin.Model\learn-xamarin.Model.csproj">
       <Project>{148cefdf-d7bf-4a02-b6bd-7da79dad9d42}</Project>
       <Name>learn-xamarin.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\learn-xamarin.Utils\learn-xamarin.Utils.csproj">
-      <Project>{3fb914a5-ec64-45b7-929b-1be9b703db79}</Project>
-      <Name>learn-xamarin.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
