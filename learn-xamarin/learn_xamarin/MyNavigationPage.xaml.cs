@@ -21,10 +21,11 @@ namespace learn_xamarin
         {
             if (navigationRequest is PushCategoriesPage) Navigation.PushAsync(new CategoriesPage(), true);
             else if (navigationRequest is PushMoneySpentSumPage) Navigation.PushAsync(new MoneySpentSumPage(), true);
-            else if (navigationRequest is BackToWelcomePage) Navigation.PopToRootAsync();
+            else if (navigationRequest is BackToWelcomePage ) Navigation.PopToRootAsync();
             else if (navigationRequest is MainMenuWelcome) ReplaceRoot(new WelcomePage());
             else if (navigationRequest is MainMenuCategories) ReplaceRoot(new CategoriesSummaryPage());
             else if (navigationRequest is MainMenuSettings) ReplaceRoot(new SettingsPage());
+            else if (navigationRequest is MainMenuStatement) ReplaceRoot(new SettingsPage()); //todo piotr statement page !
         }
 
         async Task ReplaceRoot<TPage>(TPage page) where TPage : Page

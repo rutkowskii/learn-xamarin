@@ -39,7 +39,7 @@ namespace learn_xamarin.Storage
                                       $"set {nameof(ConfigEntry.Value)} = ?" +
                                       $"where {nameof(ConfigEntry.Key)} = ?", newValue.Value, newValue.Key);
 
-            // todo later, (when having a separate data definitions for sqlite?) use update   
+            // todo get rid of this guy
         }
 
         public void ClearUnsynchronizedItems()
@@ -47,6 +47,11 @@ namespace learn_xamarin.Storage
             _sqliteConnection.DeleteAll<UnsynchronizedItem>();
         }
 
+        public void Insert(Expenditure expenditure)
+        {
+            _sqliteConnection.Insert(expenditure);
+        }
+        
         public void Insert(UnsynchronizedItem unsynchronizedItem)
         {
             _sqliteConnection.Insert(unsynchronizedItem);

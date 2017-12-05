@@ -49,12 +49,12 @@ namespace learn_xamarin.Utils
             return _restClient.Execute(request, cts.Token);
         }
 
-        public async void Post(string uri, object data)
+        public async Task<IRestResponse> Post(string uri, object data)
         {
             var request = new RestRequest(uri, Method.POST);
             request.AddHeader("Content-type", "application/json");
             request.AddJsonBody(data);
-            await _restClient.Execute(request);
+            return await _restClient.Execute(request);
         }
         
         private CancellationTokenSource DefaultCancellationTokenSource => new CancellationTokenSource(5000);
@@ -126,11 +126,16 @@ namespace learn_xamarin.Utils
         }
     }
 
-    public static class AsyncOp // todo piotr fluent builder. 
+    public static class AsyncOp
     {
         public static AsyncOp<T> Get<T>(Func<Task<T>> asyncOp, Action<T> onSuccess, Action<Exception> onFailure, Action onCancel)
         {
             return new AsyncOp<T>(asyncOp, onSuccess, onFailure, onCancel);
+        }
+        
+        public static AsyncOp<T> Get<T>(Func<Task<T>> asyncOp)
+        {
+            return new AsyncOp<T>(asyncOp, x => { }, e => { }, () => { });
         }
     }
 }

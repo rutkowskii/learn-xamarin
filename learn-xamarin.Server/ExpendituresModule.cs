@@ -42,10 +42,10 @@ namespace learn_xamarin.Server
             Request.Body.Read(buffer, 0, (int)len);
 
             var asJson = System.Text.Encoding.Default.GetString(buffer);
-            var newExpenditure = JsonConvert.DeserializeObject<Expenditure>(asJson);
-            _serverRepo.Add(newExpenditure);
+            var newExpenditures = JsonConvert.DeserializeObject<Expenditure[]>(asJson);
+            newExpenditures.Foreach(_serverRepo.Add);
 
-            Logger.Info($"About to insert new expenditure with sum {newExpenditure.Sum}");
+            newExpenditures.Foreach(newExpenditure => Logger.Info($"About to insert new expenditure with sum {newExpenditure.Sum}"));
 
             return new object();
         }

@@ -9,10 +9,11 @@ namespace learn_xamarin.Storage
         void UpdateCategories(Category[] e);
         Category[] GetAllCategories();
 
-        void Insert(UnsynchronizedItem unsynchronizedItem);
+        void Insert(Expenditure expenditure);
         Expenditure[] GetAllExpenditures();
         UnsynchronizedItem[] GetAllUnsynchronizedItems();
         void ClearUnsynchronizedItems();
         ConfigEntry[] GetAllConfigEntries();
+        void Insert(UnsynchronizedItem unsynchronizedItem);
     }
 }

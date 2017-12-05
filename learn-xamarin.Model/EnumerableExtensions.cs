@@ -19,5 +19,10 @@ namespace learn_xamarin.Model
             var result = collection.FirstOrDefault(predicate);
             return result ?? defaultValue;
         }
+        
+        public static T[] AsArray<T>(this T item)
+        {
+            return new[] {item};
+        }
     }
 }

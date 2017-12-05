@@ -89,7 +89,7 @@ namespace learn_xamarin.Vm
 
         public void RefreshSummaryInfos()
         {
-//            _expendituresDataService.TrySynchronize(Callback);
+            _expendituresDataService.TrySynchronize(Callback);
         }
 
         private void Callback(Expenditure[] allExpenditures)

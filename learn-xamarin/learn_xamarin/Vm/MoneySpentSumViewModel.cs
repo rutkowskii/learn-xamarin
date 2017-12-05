@@ -35,7 +35,7 @@ namespace learn_xamarin.Vm
                 CategoryId = _moneySpentDialogViewModel.CategorySelected.Id,
                 Id = Guid.NewGuid(),
                 Sum = _moneySpentDialogViewModel.Sum.Value,
-                Timestamp = DateTime.Now,
+                Timestamp = DateTime.UtcNow,
                 CurrencyCode = CurrentCurrencyCode
             });
             _moneySpentDialogViewModel.Clean();

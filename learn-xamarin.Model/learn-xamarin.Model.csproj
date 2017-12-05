@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Category.cs" />
+    <Compile Include="ConfigEntry.cs" />
     <Compile Include="Currency.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Expenditure.cs" />
