@@ -45,12 +45,11 @@ namespace learn_xamarin.Vm
             }
         }
 
-        private async void LoadCategoriesIfNeeded()
+        private void LoadCategoriesIfNeeded()
         {
             if (_categories != null) return;
             _categories = new ObservableCollection<Category>();
-            var categories = await _categoriesDataService.GetAll();
-            categories.Foreach(x => _categories.Add(x));
+            _categoriesDataService.GetAll(categories => categories.Foreach(_categories.Add));
         }
     }
 }

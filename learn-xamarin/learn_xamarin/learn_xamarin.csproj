@@ -80,6 +80,7 @@
     <Compile Include="Utils\DateTimeProvider.cs" />
     <Compile Include="Utils\IConnectionService.cs" />
     <Compile Include="Utils\IDateTimeProvider.cs" />
+    <Compile Include="Utils\RequestParameter.cs" />
     <Compile Include="Utils\RestConnection.cs" />
     <Compile Include="Vm\CategoriesSummaryViewModel.cs" />
     <Compile Include="Vm\CategoriesViewModel.cs" />
