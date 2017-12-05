@@ -49,10 +49,13 @@
       <DependentUpon>MainMenuPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MyNavigationPage.xaml.cs">
-      <DependentUpon>MyNavigationPage.xaml</DependentUpon>
+      <DependentUpon>MainNavigationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MoneySpentSumPage.xaml.cs">
       <DependentUpon>MoneySpentSumPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StatementPage.xaml.cs">
+      <DependentUpon>StatementPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Navigation\INavigationRequest.cs" />
     <Compile Include="Navigation\INavigationService.cs" />
@@ -88,13 +91,14 @@
     <Compile Include="Vm\MoneySpentSumViewModel.cs" />
     <Compile Include="Vm\ObservableObject.cs" />
     <Compile Include="Vm\SettingsViewModel.cs" />
+    <Compile Include="Vm\StatementViewModel.cs" />
     <Compile Include="Vm\WelcomeViewModel.cs" />
     <Compile Include="WelcomePage.xaml.cs">
       <DependentUpon>WelcomePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MyNavigationPage.xaml">
+    <EmbeddedResource Include="MainNavigationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -105,6 +109,10 @@
     <EmbeddedResource Include="SettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StatementPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

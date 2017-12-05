@@ -9,5 +9,7 @@ namespace learn_xamarin.Model
         public Guid CategoryId { get; set; }
         public DateTime Timestamp { get; set; }
         public string CurrencyCode { get; set; }
+
+        public string Label => $"Spent {Sum} {CurrencyCode} on {CategoryId.ToString().Substring(0, 5)}, time {Timestamp}";
     }
 }

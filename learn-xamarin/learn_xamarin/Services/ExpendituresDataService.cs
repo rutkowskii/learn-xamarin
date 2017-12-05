@@ -12,11 +12,10 @@ namespace learn_xamarin.Services
         private readonly ILocalDatabase _localDatabase;
         private readonly RestConnection _restConnection;
 
-        public ExpendituresDataService(ILocalDatabase localDatabase,
-            RestConnection restConnection)
+        public ExpendituresDataService(ILocalDatabase localDatabase, RestConnection restConnection)
         {
             _localDatabase = localDatabase;
-            _restConnection = restConnection;
+            _restConnection = restConnection; // todo piotr cache?
         }
 
         public void Add(Expenditure expenditure)
@@ -28,6 +27,11 @@ namespace learn_xamarin.Services
                 onFailure: x => _localDatabase.Insert(new UnsynchronizedItem{ Id = expenditure.Id}),
                 onCancel: () => _localDatabase.Insert(new UnsynchronizedItem{ Id = expenditure.Id})
             ).Run();
+        }
+
+        public void GetAll(Action<Expenditure[]> callback)
+        {
+            callback(_localDatabase.GetAllExpenditures()); // todo piotr cache read / backend communication. 
         }
         
         // start with a simple model -> save locally, backend is just a backup dir. 

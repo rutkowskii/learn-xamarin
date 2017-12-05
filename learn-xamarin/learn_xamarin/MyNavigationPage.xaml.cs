@@ -5,11 +5,11 @@ using Xamarin.Forms;
 
 namespace learn_xamarin
 {
-    public partial class MyNavigationPage : NavigationPage
+    public partial class MainNavigationPage : NavigationPage
     {
         private readonly INavigationService _navigationService;
 
-        public MyNavigationPage()
+        public MainNavigationPage()
         {
             InitializeComponent();
             var container = Container.Instance;
@@ -25,7 +25,7 @@ namespace learn_xamarin
             else if (navigationRequest is MainMenuWelcome) ReplaceRoot(new WelcomePage());
             else if (navigationRequest is MainMenuCategories) ReplaceRoot(new CategoriesSummaryPage());
             else if (navigationRequest is MainMenuSettings) ReplaceRoot(new SettingsPage());
-            else if (navigationRequest is MainMenuStatement) ReplaceRoot(new SettingsPage()); //todo piotr statement page !
+            else if (navigationRequest is MainMenuStatement) ReplaceRoot(new StatementPage());
         }
 
         async Task ReplaceRoot<TPage>(TPage page) where TPage : Page

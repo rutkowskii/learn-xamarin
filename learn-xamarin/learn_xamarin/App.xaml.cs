@@ -15,7 +15,7 @@ namespace learn_xamarin
            
             var mainPage = new MainPage();
 
-            mainPage.Detail = new MyNavigationPage();
+            mainPage.Detail = new MainNavigationPage();
             var mainMenuPage = new MainMenuPage();
             mainMenuPage.MenuItems.ItemSelected += onMainMenuItemSelected;
 
@@ -25,7 +25,7 @@ namespace learn_xamarin
             ((NavigationPage)mainPage.Detail).PushAsync(new WelcomePage());
         }
 
-        private void onMainMenuItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
+        private void onMainMenuItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs) // todo piotr move it to main menu page?
         {
             var itemSelected = selectedItemChangedEventArgs.SelectedItem as MainMenuItem;
             //NavigationService.Instance.Request(itemSelected.NavigationRequest);

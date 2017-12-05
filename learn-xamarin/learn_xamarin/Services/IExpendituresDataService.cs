@@ -7,5 +7,6 @@ namespace learn_xamarin.Services
     {
         void Add(Expenditure expenditure);
         void TrySynchronize(Action<Expenditure[]> callback);
+        void GetAll(Action<Expenditure[]> callback);
     }
 }

@@ -20,8 +20,8 @@ namespace learn_xamarin
         {
             yield return new MainMenuItem {Title = "Home", NavigationRequest = new MainMenuWelcome()};
             yield return new MainMenuItem {Title = "Categories", NavigationRequest = new MainMenuCategories()};
-            yield return new MainMenuItem {Title = "Settings", NavigationRequest = new MainMenuSettings()};
             yield return new MainMenuItem {Title = "Statement", NavigationRequest = new MainMenuStatement()};
+            yield return new MainMenuItem {Title = "Settings", NavigationRequest = new MainMenuSettings()};
         }
     }
 

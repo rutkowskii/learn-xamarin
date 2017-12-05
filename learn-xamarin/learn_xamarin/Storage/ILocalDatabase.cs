@@ -13,7 +13,6 @@ namespace learn_xamarin.Storage
         Expenditure[] GetAllExpenditures();
         UnsynchronizedItem[] GetAllUnsynchronizedItems();
         void ClearUnsynchronizedItems();
-        ConfigEntry[] GetAllConfigEntries();
         void Insert(UnsynchronizedItem unsynchronizedItem);
     }
 }
