@@ -4,16 +4,25 @@ using Xamarin.Forms;
 
 namespace learn_xamarin.Storage
 {
+    public interface IFilePathProvider
+    {
+        string Path { get; }
+    }
+
+    class XamarinFilePathProvider : IFilePathProvider
+    {
+        private const string FileName = "ExpendituresDb";
+        
+        public string Path => DependencyService.Get<IFileHelper>().GetLocalFilePath(FileName);
+    }
+
     public class LocalDatabase : ILocalDatabase
     {
-        private readonly string _localFilePath;
         private readonly SQLiteConnection _sqliteConnection;
-        private const string FileName = "ExpendituresDb";
-
-        public LocalDatabase()
+      
+        public LocalDatabase(IFilePathProvider filePathProvider)
         {
-            _localFilePath = DependencyService.Get<IFileHelper>().GetLocalFilePath(FileName);
-            _sqliteConnection = new SQLiteConnection(_localFilePath);
+            _sqliteConnection = new SQLiteConnection(filePathProvider.Path);
 
             InitiateSchemaIfNeeded();
         }

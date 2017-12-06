@@ -11,6 +11,7 @@ namespace learn_xamarin.Storage
 
         void Insert(Expenditure expenditure);
         Expenditure[] GetAllExpenditures();
+        
         UnsynchronizedItem[] GetAllUnsynchronizedItems();
         void ClearUnsynchronizedItems();
         void Insert(UnsynchronizedItem unsynchronizedItem);

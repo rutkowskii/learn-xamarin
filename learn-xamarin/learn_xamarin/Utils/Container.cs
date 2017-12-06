@@ -16,22 +16,37 @@ namespace learn_xamarin.Utils
         private Container()
         {
             _kernel = new StandardKernel();
-            _kernel.Bind<ILocalDatabase>().To<LocalDatabase>().InSingletonScope();
-            _kernel.Bind<ISettingsRepo>().To<SettingsRepo>().InSingletonScope();
-            _kernel.Bind<IConnectionService>().To<ConnectionService>().InSingletonScope();
-            _kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
-            _kernel.Bind<RestClient>().To<RestClient>().InSingletonScope();
-            _kernel.Bind<IDateTimeProvider>().To<DateTimeProvider>().InSingletonScope();
-
-            _kernel.Bind<MoneySpentDialogViewModel>().To<MoneySpentDialogViewModel>().InSingletonScope();
-
-            _kernel.Bind<ICategoriesDataService>().To<CategoriesDataService>().InSingletonScope();
-            _kernel.Bind<IExpendituresDataService>().To<ExpendituresDataService>().InSingletonScope();
+            new BasicInstaller().RunInstallation(_kernel);
         }
 
         public T Get<T>()
         {
             return _kernel.Get<T>();
+        }
+    }
+
+    public interface IInstaller
+    {
+        void RunInstallation(IKernel kernel);
+    }
+
+    public class BasicInstaller : IInstaller
+    {
+        public void RunInstallation(IKernel kernel)
+        {
+            kernel.Bind<IFilePathProvider>().To<XamarinFilePathProvider>().InSingletonScope();
+            kernel.Bind<ILocalDatabase>().To<LocalDatabase>().InSingletonScope();
+            kernel.Bind<IRestConnection>().To<RestConnection>().InSingletonScope();
+            kernel.Bind<ISettingsRepo>().To<SettingsRepo>().InSingletonScope();
+            kernel.Bind<IConnectionService>().To<ConnectionService>().InSingletonScope();
+            kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
+            kernel.Bind<RestClient>().To<RestClient>().InSingletonScope();
+            kernel.Bind<IDateTimeProvider>().To<DateTimeProvider>().InSingletonScope();
+
+            kernel.Bind<MoneySpentDialogViewModel>().To<MoneySpentDialogViewModel>().InSingletonScope();
+
+            kernel.Bind<ICategoriesDataService>().To<CategoriesDataService>().InSingletonScope();
+            kernel.Bind<IExpendituresDataService>().To<ExpendituresDataService>().InSingletonScope();
         }
     }
 }

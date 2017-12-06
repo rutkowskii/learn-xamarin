@@ -13,9 +13,9 @@ namespace learn_xamarin.Services
     public class CategoriesDataService : ICategoriesDataService
     {
         private readonly ILocalDatabase _localDb;
-        private readonly RestConnection _restConnection;
+        private readonly IRestConnection _restConnection;
 
-        public CategoriesDataService(RestConnection restConnection, ILocalDatabase localDb)
+        public CategoriesDataService(IRestConnection restConnection, ILocalDatabase localDb)
         {
             _restConnection = restConnection;
             _localDb = localDb;

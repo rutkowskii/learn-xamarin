@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using learn_xamarin.Model;
 using learn_xamarin.Services;
@@ -21,8 +20,6 @@ namespace learn_xamarin.Vm
         {
             get
             {
-                 // todo piotr you sure it is okay?
-                Debug.WriteLine(">>>>>>>>>>>... We inside StatementElements getter");
                 _expendituresDataService.GetAll(OnReceivingExpenditures);
                 return _statementElements;
             }

@@ -10,9 +10,9 @@ namespace learn_xamarin.Services
     class ExpendituresDataService : IExpendituresDataService
     {
         private readonly ILocalDatabase _localDatabase;
-        private readonly RestConnection _restConnection;
+        private readonly IRestConnection _restConnection;
 
-        public ExpendituresDataService(ILocalDatabase localDatabase, RestConnection restConnection)
+        public ExpendituresDataService(ILocalDatabase localDatabase, IRestConnection restConnection)
         {
             _localDatabase = localDatabase;
             _restConnection = restConnection; // todo piotr cache?
