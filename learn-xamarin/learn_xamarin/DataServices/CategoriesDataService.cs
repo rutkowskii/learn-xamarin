@@ -1,14 +1,11 @@
 using System;
-using System.IO;
-using System.Threading.Tasks;
 using learn_xamarin.Model;
+using learn_xamarin.Storage;
 using learn_xamarin.Utils;
 using Newtonsoft.Json;
-using learn_xamarin.Storage;
-using System.Threading;
 using RestSharp.Portable;
 
-namespace learn_xamarin.Services
+namespace learn_xamarin.DataServices
 {
     public class CategoriesDataService : ICategoriesDataService
     {

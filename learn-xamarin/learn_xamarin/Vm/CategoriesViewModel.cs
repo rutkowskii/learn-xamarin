@@ -2,8 +2,8 @@ using System;
 using System.Collections.ObjectModel;
 using learn_xamarin.Model;
 using learn_xamarin.Navigation;
-using learn_xamarin.Services;
 using System.Linq;
+using learn_xamarin.DataServices;
 
 namespace learn_xamarin.Vm
 {

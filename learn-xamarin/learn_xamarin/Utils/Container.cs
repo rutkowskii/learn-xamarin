@@ -1,5 +1,5 @@
+using learn_xamarin.DataServices;
 using learn_xamarin.Navigation;
-using learn_xamarin.Services;
 using learn_xamarin.Storage;
 using learn_xamarin.Vm;
 using Ninject;
@@ -24,13 +24,8 @@ namespace learn_xamarin.Utils
             return _kernel.Get<T>();
         }
     }
-
-    public interface IInstaller
-    {
-        void RunInstallation(IKernel kernel);
-    }
-
-    public class BasicInstaller : IInstaller
+    
+    public class BasicInstaller
     {
         public void RunInstallation(IKernel kernel)
         {

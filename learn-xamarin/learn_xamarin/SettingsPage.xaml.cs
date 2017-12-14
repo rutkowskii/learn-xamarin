@@ -23,11 +23,6 @@ namespace learn_xamarin
             var itemCasted = e.Item as SettingsViewModel.SettingsItem;
             ((ListView)sender).SelectedItem = null; // get rid of the selection, otherwise, the item will stay highlighted 
             itemCasted.Cmd.Execute(this);
-            
-            // todo piotr tmp
-//            var currencyChosen = await DisplayActionSheet("Choose the main currency", "Cancel", null, new[]{"PLN", "USD", "GBP"});
-//            Debug.WriteLine($">>>>>>>>>>> {currencyChosen} CHOSEN");
-            
         }
     }
 }

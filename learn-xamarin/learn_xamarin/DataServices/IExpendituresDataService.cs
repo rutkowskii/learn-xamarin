@@ -1,7 +1,7 @@
 using System;
 using learn_xamarin.Model;
 
-namespace learn_xamarin.Services
+namespace learn_xamarin.DataServices
 {
     public interface IExpendituresDataService
     {

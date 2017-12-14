@@ -62,10 +62,10 @@
     <Compile Include="Navigation\NavigationService.cs" />
     <Compile Include="Navigation\PushCategoriesPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CategoriesDataService.cs" />
-    <Compile Include="Services\ExpendituresDataService.cs" />
-    <Compile Include="Services\ICategoriesDataService.cs" />
-    <Compile Include="Services\IExpendituresDataService.cs" />
+    <Compile Include="DataServices\CategoriesDataService.cs" />
+    <Compile Include="DataServices\ExpendituresDataService.cs" />
+    <Compile Include="DataServices\ICategoriesDataService.cs" />
+    <Compile Include="DataServices\IExpendituresDataService.cs" />
     <Compile Include="CategoriesSummaryPage.xaml.cs">
       <DependentUpon>CategoriesSummaryPage.xaml</DependentUpon>
     </Compile>

@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using learn_xamarin.DataServices;
 using learn_xamarin.Model;
-using learn_xamarin.Services;
 
 namespace learn_xamarin.Vm
 {

@@ -5,7 +5,7 @@ using learn_xamarin.Model;
 using learn_xamarin.Storage;
 using learn_xamarin.Utils;
 
-namespace learn_xamarin.Services
+namespace learn_xamarin.DataServices
 {
     class ExpendituresDataService : IExpendituresDataService
     {
@@ -15,7 +15,8 @@ namespace learn_xamarin.Services
         public ExpendituresDataService(ILocalDatabase localDatabase, IRestConnection restConnection)
         {
             _localDatabase = localDatabase;
-            _restConnection = restConnection; // todo piotr cache?
+            _restConnection = restConnection; // todo piotr what about cache???????????????????????????????????
+            // simple dictionary so we dont need to call local db? what about the server? what if the local db is empty and server holds stufff?
         }
 
         public void Add(Expenditure expenditure)
@@ -32,17 +33,15 @@ namespace learn_xamarin.Services
         public void GetAll(Action<Expenditure[]> callback)
         {
             callback(_localDatabase.GetAllExpenditures()); // todo piotr cache read / backend communication. 
-        }
-        
-        // start with a simple model -> save locally, backend is just a backup dir. 
-        // todo piotr [!] general question -> how to sync 2 ways --> leave it for later. 
+        } 
         
         public void TrySynchronize(Action<Expenditure[]> callback)
         {
             var currentlyCashed = _localDatabase.GetAllExpenditures();
             var unsynchronizedIds = new HashSet<Guid>(_localDatabase.GetAllUnsynchronizedItems().Select(i => i.Id));
             
-            UploadExpendituresToServer(currentlyCashed, unsynchronizedIds);
+            UploadExpendituresToServer(currentlyCashed, unsynchronizedIds); //  todo piotr this is naive, 1-way so far. 
+            callback(currentlyCashed);
         }
 
         private void UploadExpendituresToServer(Expenditure[] currentlyCashed, HashSet<Guid> unsynchronizedIds)

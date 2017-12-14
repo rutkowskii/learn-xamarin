@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Windows.Input;
+using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 using learn_xamarin.Navigation;
-using learn_xamarin.Services;
 using learn_xamarin.Utils;
 using Xamarin.Forms;
 
