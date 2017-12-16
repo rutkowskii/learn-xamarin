@@ -17,11 +17,5 @@ namespace learn_xamarin
             InitializeComponent();
             BindingContext = Container.Instance.Get<WelcomeViewModel>();
         }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            (BindingContext as WelcomeViewModel).RefreshSummaryInfos();    
-        }
     }
 }

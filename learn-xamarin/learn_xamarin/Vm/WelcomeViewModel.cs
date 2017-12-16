@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
 using learn_xamarin.DataServices;
@@ -19,6 +20,7 @@ namespace learn_xamarin.Vm
         private string _spentThisMonth;
         private string _spentToday;
         private string _lastExpenditures;
+        private IExpendituresCache _expendituresCache;
 
         public WelcomeViewModel(INavigationService navigationService, 
             IExpendituresDataService expendituresDataService,
@@ -26,16 +28,18 @@ namespace learn_xamarin.Vm
         {
             _navigationService = navigationService;
             _expendituresDataService = expendituresDataService;
+            _expendituresCache = _expendituresDataService.GetCache();
+            _expendituresCache.CollectionChanged += OnCacheUpdated;
             _dateTimeProvider = dateTimeProvider;
             MoneySpentCommnand = new Command(MoneySpent);
         }
 
+        public ICommand MoneySpentCommnand { get; private set; }
+        
         private void MoneySpent()
         {
             _navigationService.Request(new PushCategoriesPage());
         }
-
-        public ICommand MoneySpentCommnand { get; private set; }
 
         public string LastExpenditures
         {
@@ -67,7 +71,7 @@ namespace learn_xamarin.Vm
             }
         }
 
-        public string SpentThisWeek
+        public string SpentThisWeek // todo piotr show in ui. 
         {
             get { return _spentThisWeek; }
             set
@@ -76,66 +80,13 @@ namespace learn_xamarin.Vm
                 OnPropertyChanged(nameof(SpentThisWeek));
             }
         }
-
-        public string SpentToday
+        
+        private void OnCacheUpdated(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            get { return _spentToday; }
-            set
-            {
-                _spentToday = value;
-                OnPropertyChanged(nameof(SpentToday));
-            }
+            SpentThisWeek = $"Spent {_expendituresCache.SumThisWeek} this week";
+            SpentThisMonth = $"Spent {_expendituresCache.SumThisMonth} this month";
+            SpentOverall = $"Spent {_expendituresCache.Sum} overall";
         }
-
-        public void RefreshSummaryInfos()
-        {
-            _expendituresDataService.TrySynchronize(Callback);
-        }
-
-        private void Callback(Expenditure[] allExpenditures)
-        {
-            var now = _dateTimeProvider.Now;
-
-            var sumOverall = allExpenditures.Sum(e => e.Sum);
-            var sumThisMonth = allExpenditures
-                .Where(e => e.Timestamp >= MonthStart(now))
-                .Sum(e => e.Sum);
-            var sumToday = allExpenditures
-                .Where(e => e.Timestamp >= DateTime.Today && e.Timestamp < DateTime.Today.AddDays(1))
-                .Sum(e => e.Sum);
-            var sumThisWeek = allExpenditures
-                .Where(e => e.Timestamp > WeekStart(now))
-                .Sum(e => e.Sum);
-
-            SpentToday = $"Spent {sumToday} today";
-            SpentThisWeek = $"Spent {sumThisWeek} this week";
-            SpentThisMonth = $"Spent {sumThisMonth} this month";
-            SpentOverall = $"Spent {sumOverall} overall";
-
-            var tmp = allExpenditures
-                .OrderByDescending(e => e.Timestamp)
-                .Take(3);
-            var dts = tmp.Select(e => e.Timestamp).ToArray();
-            LastExpenditures = string.Join(", ",
-                tmp
-                    .Select(e => $"{e.Timestamp} Spent {e.Sum}")
-                    .ToArray());
-        }
-
-        public DateTime MonthStart(DateTime dt)
-        {
-            return new DateTime(dt.Year, dt.Month, 1);
-        }
-
-        public DateTime WeekStart(DateTime dt)
-        {
-            for (var i = dt;; i = i.AddDays(-1))
-            {
-                if (i.DayOfWeek == DayOfWeek.Monday)
-                {
-                    return i.Date;
-                }
-            }
-        }
+      
     }
 }

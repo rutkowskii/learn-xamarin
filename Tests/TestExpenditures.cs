@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 using learn_xamarin.Storage;
+using learn_xamarin.Utils;
 using learn_xamarin.Vm;
 using Ninject;
 using NUnit.Framework;
@@ -37,13 +39,33 @@ namespace Tests
         }
         
         [Test]
-        public void Expenditures_are_showed_in_the_statements_when_server_is_DOWN()
+        public void Expenditures_are_shown_in_the_statements_when_server_is_DOWN()
         {
             _tc.RunSetups(new SetupUnavailableServer());
 
             InsertSampleExpenditure();
 
             AssertTopStatementElementValues();
+        }
+        
+        [Test]
+        public void Expenditures_are_shown_in_the_statements_starting_with_the_latest()
+        {
+            var category1 = _fixture.Create<Category>();
+            var category2 = _fixture.Create<Category>();
+            var sum1 = _fixture.Create<decimal>();
+            var sum2 = _fixture.Create<decimal>();
+            
+            _tc.RunSetups(new SetupStubServer());
+
+            _tc.SetupTime(DateTime.Today.AddHours(8).AddMinutes(20));
+            new InsertExpenditureAction(category1, sum1).Run(_tc);
+            _tc.SetupTime(DateTime.Today.AddHours(8).AddMinutes(35));
+            new InsertExpenditureAction(category2, sum2).Run(_tc);
+
+            var actualStementElements = _tc.Kernel.Get<StatementViewModel>().StatementElements.ToArray();
+            CollectionAssert.AreEqual(new[]{sum2, sum1}, actualStementElements.Select(x => x.Sum).ToArray());
+            CollectionAssert.AreEqual(new[]{category2.Id, category1.Id}, actualStementElements.Select(x => x.CategoryId).ToArray());
         }
 
         [Test]
@@ -88,16 +110,15 @@ namespace Tests
             Assert.AreEqual(_setupLocalSettings.Current, actual.CurrencyCode);
         }
         
-        // todo piotr now the synchronization. think of WHEN to trigger the sync. 
+        // todo piotr now the synchronization. think of WHEN to trigger the sync.
+        /// todo piotr timezones when displaying the statement?
         // once it works, we done with it!
 
         private Expenditure TopStatementElement => _tc.Kernel.Get<StatementViewModel>().StatementElements.First();
 
         private void InsertSampleExpenditure()
         {
-            _tc.Kernel.Get<MoneySpentDialogViewModel>().CategorySelected = _category;
-            _tc.Kernel.Get<MoneySpentDialogViewModel>().Sum = _sum;
-            _tc.Kernel.Get<MoneySpentSumViewModel>().ConfirmationCommand.Execute(null);
+            new InsertExpenditureAction(_category, _sum).Run(_tc);
         }
     }
 }

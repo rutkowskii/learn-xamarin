@@ -7,6 +7,6 @@ namespace learn_xamarin.DataServices
     {
         void Add(Expenditure expenditure);
         void TrySynchronize(Action<Expenditure[]> callback);
-        void GetAll(Action<Expenditure[]> callback);
+        IExpendituresCache GetCache();
     }
 }
