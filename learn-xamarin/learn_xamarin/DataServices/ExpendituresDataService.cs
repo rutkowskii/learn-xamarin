@@ -14,22 +14,16 @@ namespace learn_xamarin.DataServices
     {
         private readonly ILocalDatabase _localDatabase;
         private readonly IRestConnection _restConnection;
+        private readonly IExpendituresCache _cache; 
 
-        private readonly ExpendituresCache _cache; 
-
-        public ExpendituresDataService(ILocalDatabase localDatabase, IRestConnection restConnection, IDateTimeProvider dateTimeProvider)
+        public ExpendituresDataService(ILocalDatabase localDatabase, IRestConnection restConnection, IExpendituresCache expendituresCache)
         {
             _localDatabase = localDatabase;
             _restConnection = restConnection;
-            _cache = new ExpendituresCache(dateTimeProvider);
+            _cache = expendituresCache;
             _localDatabase.GetAllExpenditures().Foreach(_cache.Add);
         }
-
-        public IExpendituresCache GetCache()
-        {
-            return _cache;
-        }
-
+        
         public void Add(Expenditure expenditure)
         {
             _localDatabase.Insert(expenditure);
@@ -76,14 +70,14 @@ namespace learn_xamarin.DataServices
         void Add(T items);
     }
 
-    public interface IExpendituresCache : IReadOnlyCache<Expenditure>
+    public interface IExpendituresCache :  ICache<Expenditure>
     {
         decimal Sum { get; }
         decimal SumThisWeek { get; }
         decimal SumThisMonth { get; }
     }
     
-    public class Cache<T> : ICache<T>, IReadOnlyCache<T>
+    public class Cache<T> : ICache<T>
     {
         private readonly ObservableCollection<T> _inner;
 
@@ -95,6 +89,7 @@ namespace learn_xamarin.DataServices
 
         private void OnInnerCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            CollectionChanged?.Invoke(this, e);
             OnInnerCollectionChanged(e);
         }
 
@@ -118,9 +113,11 @@ namespace learn_xamarin.DataServices
     public class ExpendituresCache : Cache<Expenditure>, IExpendituresCache
     {
         private readonly IDateTimeProvider _dateTimeProvider;
+        private Guid _id;
 
         public ExpendituresCache(IDateTimeProvider dateTimeProvider)
         {
+            _id = Guid.NewGuid();
             _dateTimeProvider = dateTimeProvider;
             Sum = 0;
         }

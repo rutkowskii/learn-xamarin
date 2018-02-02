@@ -27,8 +27,6 @@ namespace Tests
         [Test]
         public void Adding_expenditures_updates_this_week_summary()
         {
-            Assert.AreEqual("Spent 0 this week", _tc.Kernel.Get<WelcomeViewModel>().SpentThisWeek);
-            
             var sums = _fixture.CreateMany<decimal>();
             sums.Foreach(sum => new InsertExpenditureAction(_fixture.Create<Category>(), sum).Run(_tc));
             

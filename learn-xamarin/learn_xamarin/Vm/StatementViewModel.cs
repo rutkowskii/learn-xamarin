@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using learn_xamarin.DataServices;
@@ -11,12 +10,13 @@ namespace learn_xamarin.Vm
     {
         private readonly IExpendituresDataService _expendituresDataService;
         private ObservableCollection<Expenditure> _statementElements;
+        
 
-        public StatementViewModel(IExpendituresDataService expendituresDataService)
+        public StatementViewModel(IExpendituresCache expendituresCache)
         {
-            _expendituresDataService = expendituresDataService;
-            _expendituresDataService.GetCache().CollectionChanged += OnCollectionChanged; // todo piotr from hierr, what if cache already has content?
             StatementElements = new ObservableCollection<Expenditure>();
+            expendituresCache.All().Foreach(Insert);
+            expendituresCache.CollectionChanged += OnCollectionChanged;
         }
 
         public ObservableCollection<Expenditure> StatementElements

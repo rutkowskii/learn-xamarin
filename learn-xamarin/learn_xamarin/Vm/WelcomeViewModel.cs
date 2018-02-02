@@ -13,24 +13,21 @@ namespace learn_xamarin.Vm
     public class WelcomeViewModel : ObservableObject
     {
         private readonly INavigationService _navigationService;
-        private readonly IExpendituresDataService _expendituresDataService;
-        private readonly IDateTimeProvider _dateTimeProvider;
         private string _spentThisWeek;
         private string _spentOverall;
         private string _spentThisMonth;
         private string _spentToday;
         private string _lastExpenditures;
-        private IExpendituresCache _expendituresCache;
+        private readonly IExpendituresCache _expendituresCache;
 
-        public WelcomeViewModel(INavigationService navigationService, 
-            IExpendituresDataService expendituresDataService,
-            IDateTimeProvider dateTimeProvider)
+        public WelcomeViewModel(
+            INavigationService navigationService,
+            IExpendituresCache expendituresCache)
         {
             _navigationService = navigationService;
-            _expendituresDataService = expendituresDataService;
-            _expendituresCache = _expendituresDataService.GetCache();
+            _expendituresCache = expendituresCache;
             _expendituresCache.CollectionChanged += OnCacheUpdated;
-            _dateTimeProvider = dateTimeProvider;
+            UpdateSummariesFromCache();
             MoneySpentCommnand = new Command(MoneySpent);
         }
 
@@ -83,10 +80,14 @@ namespace learn_xamarin.Vm
         
         private void OnCacheUpdated(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            SpentThisWeek = $"Spent {_expendituresCache.SumThisWeek} this week";
-            SpentThisMonth = $"Spent {_expendituresCache.SumThisMonth} this month";
-            SpentOverall = $"Spent {_expendituresCache.Sum} overall";
+            UpdateSummariesFromCache();
         }
-      
+
+        private void UpdateSummariesFromCache()
+        {
+            SpentThisWeek = _expendituresCache.SumThisWeek > 0 ? $"Spent {_expendituresCache.SumThisWeek} this week" : string.Empty;
+            SpentThisMonth = _expendituresCache.SumThisMonth > 0 ?  $"Spent {_expendituresCache.SumThisMonth} this month" : string.Empty;
+            SpentOverall = _expendituresCache.Sum > 0 ? $"Spent {_expendituresCache.Sum} overall" : string.Empty;
+        }
     }
 }

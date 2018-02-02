@@ -37,6 +37,7 @@ namespace learn_xamarin.Utils
             kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
             kernel.Bind<RestClient>().To<RestClient>().InSingletonScope();
             kernel.Bind<IDateTimeProvider>().To<DateTimeProvider>().InSingletonScope();
+            kernel.Bind<IExpendituresCache>().To<ExpendituresCache>().InSingletonScope();
 
             kernel.Bind<MoneySpentDialogViewModel>().To<MoneySpentDialogViewModel>().InSingletonScope();
 
