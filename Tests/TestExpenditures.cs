@@ -94,20 +94,29 @@ namespace Tests
             _tc.RunSetups(stubServer);
             _tc.Kernel.Get<IExpendituresDataService>().TrySynchronize(_ => { });
             
+            AssertExpenditureWasPassedToServer(stubServer);
+            AssertThereAreNoUnsynchronizedItems();
+        }
+
+        private void AssertThereAreNoUnsynchronizedItems()
+        {
+            Assert.AreEqual(0, _tc.Kernel.Get<ILocalDatabase>().GetAllUnsynchronizedItems().Length);
+        }
+
+        private void AssertExpenditureWasPassedToServer(SetupStubServer stubServer)
+        {
             var actual = (stubServer.LastData as Expenditure[]).Single();
             Assert.AreEqual(_category.Id, actual.CategoryId);
             Assert.AreEqual(_sum, actual.Sum);
-            Assert.AreEqual(_setupLocalSettings.Current, actual.CurrencyCode);
-            
-            Assert.AreEqual(0, _tc.Kernel.Get<ILocalDatabase>().GetAllUnsynchronizedItems().Length);
+            Assert.AreEqual(_setupLocalSettings.CurrentCurrency, actual.CurrencyCode);
         }
-        
+
         private void AssertTopStatementElementValues()
         {
             var actual = TopStatementElement;
             Assert.AreEqual(_category.Id, actual.CategoryId);
             Assert.AreEqual(_sum, actual.Sum);
-            Assert.AreEqual(_setupLocalSettings.Current, actual.CurrencyCode);
+            Assert.AreEqual(_setupLocalSettings.CurrentCurrency, actual.CurrencyCode);
         }
         
         // todo piotr now the synchronization. think of WHEN to trigger the sync.

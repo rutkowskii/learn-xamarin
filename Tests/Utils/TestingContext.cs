@@ -1,9 +1,9 @@
 ﻿using System;
+using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 using learn_xamarin.Navigation;
 using learn_xamarin.Storage;
 using learn_xamarin.Utils;
-using learn_xamarin.Vm;
 using Moq;
 using Ninject;
 
@@ -16,12 +16,14 @@ namespace Tests.Utils
         public StandardKernel Kernel { get; }
         public Mock<IRestConnection> RestConnection { get; }
         public Mock<ISettingsRepo> SettingsRepo { get; }
+        public Mock<IExchangeRateDataService> ExchangeRateService { get; }
 
         public TestingContext()
         {
             Kernel = new StandardKernel();
             RestConnection = new Mock<IRestConnection>();
             SettingsRepo = new Mock<ISettingsRepo>();
+            ExchangeRateService = new Mock<IExchangeRateDataService>();
             _filePathProvider = new Mock<IFilePathProvider>();
             _filePathProvider.SetupGet(p => p.Path).Returns(":memory:");
             _dateTimeProvider = new Mock<IDateTimeProvider>();
@@ -45,6 +47,7 @@ namespace Tests.Utils
             BindToMock(kernel, _filePathProvider);
             BindToMock(kernel, RestConnection);
             BindToMock(kernel, SettingsRepo);
+            BindToMock(kernel, ExchangeRateService);
             BindToMock(kernel, _dateTimeProvider);
             BindToMock<INavigationService>(kernel);
         }
@@ -57,25 +60,6 @@ namespace Tests.Utils
         private void BindToMock<T>(IKernel kernel) where T : class
         {
             kernel.Rebind<T>().ToConstant(new Mock<T>().Object);
-        }
-    }
-
-    public class InsertExpenditureAction
-    {
-        private Category _category;
-        private decimal _sum;
-
-        public InsertExpenditureAction(Category category, decimal sum)
-        {
-            _category = category;
-            _sum = sum;
-        }
-
-        public void Run(TestingContext tc)
-        {
-            tc.Kernel.Get<MoneySpentDialogViewModel>().CategorySelected = _category;
-            tc.Kernel.Get<MoneySpentDialogViewModel>().Sum = _sum;
-            tc.Kernel.Get<MoneySpentSumViewModel>().ConfirmationCommand.Execute(null);
         }
     }
 }

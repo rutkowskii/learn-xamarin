@@ -1,3 +1,4 @@
+using learn_xamarin.Cache;
 using learn_xamarin.DataServices;
 using learn_xamarin.Navigation;
 using learn_xamarin.Storage;

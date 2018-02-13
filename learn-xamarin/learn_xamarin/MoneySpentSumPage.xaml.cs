@@ -15,7 +15,7 @@ namespace learn_xamarin
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            this.sumEntry.Focus();
+            sumEntry.Focus();
         }
     }
 }

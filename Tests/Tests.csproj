@@ -80,8 +80,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSettingsScreen.cs" />
     <Compile Include="TestWelcomeScreen.cs" />
+    <Compile Include="Utils\InsertExpenditureAction.cs" />
     <Compile Include="Utils\ITestSetup.cs" />
+    <Compile Include="Utils\SetupExchangeRate.cs" />
     <Compile Include="Utils\SetupLocalSettings.cs" />
+    <Compile Include="Utils\SetupStubServer.cs" />
     <Compile Include="Utils\SetupUnavailableServer.cs" />
     <Compile Include="Utils\TestingContext.cs" />
   </ItemGroup>

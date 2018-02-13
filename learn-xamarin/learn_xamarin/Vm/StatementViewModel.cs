@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using learn_xamarin.Cache;
 using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 
@@ -36,7 +37,7 @@ namespace learn_xamarin.Vm
                 .Foreach(Insert);
         }
 
-        private void Insert(Expenditure newElement) // statement elements are sorted by time desc, todo piotr test for it.
+        private void Insert(Expenditure newElement)
         {
             var index = 0;
             foreach (var existingElement in _statementElements)

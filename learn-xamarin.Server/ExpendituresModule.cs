@@ -24,7 +24,7 @@ namespace learn_xamarin.Server
 
         private ExpendituresQueryParams ResolveParams()
         {
-            var ignoreBelow = this.Request.Query[RestCallsConstants.IgnoreBelow];
+            var ignoreBelow = Request.Query[RestCallsConstants.IgnoreBelow];
             if (ignoreBelow == null) return null;
 
             var res = new ExpendituresQueryParams

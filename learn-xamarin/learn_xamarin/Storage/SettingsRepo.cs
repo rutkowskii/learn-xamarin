@@ -21,7 +21,7 @@ namespace learn_xamarin.Storage
             }
         }
 
-        public string Get(string key)
+        public string Get(string key) // todo piotr this lock on get is not a good idea :/
         {
             lock (_monitor)
             {

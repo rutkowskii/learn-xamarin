@@ -2,6 +2,7 @@ using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
+using learn_xamarin.Cache;
 using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 using learn_xamarin.Navigation;
@@ -85,9 +86,9 @@ namespace learn_xamarin.Vm
 
         private void UpdateSummariesFromCache()
         {
-            SpentThisWeek = _expendituresCache.SumThisWeek > 0 ? $"Spent {_expendituresCache.SumThisWeek} this week" : string.Empty;
-            SpentThisMonth = _expendituresCache.SumThisMonth > 0 ?  $"Spent {_expendituresCache.SumThisMonth} this month" : string.Empty;
-            SpentOverall = _expendituresCache.Sum > 0 ? $"Spent {_expendituresCache.Sum} overall" : string.Empty;
+            SpentThisWeek = _expendituresCache.SumThisWeek > 0 ? $"Spent {_expendituresCache.SumThisWeek:0.##} this week" : string.Empty;
+            SpentThisMonth = _expendituresCache.SumThisMonth > 0 ?  $"Spent {_expendituresCache.SumThisMonth:0.##} this month" : string.Empty;
+            SpentOverall = _expendituresCache.Sum > 0 ? $"Spent {_expendituresCache.Sum:0.##} overall" : string.Empty;
         }
     }
 }

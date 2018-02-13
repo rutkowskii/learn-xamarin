@@ -39,9 +39,15 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Behaviors\MoneySpentSumValidationBehavior.cs" />
+    <Compile Include="Cache\Base\Cache.cs" />
+    <Compile Include="Cache\Base\ICache.cs" />
+    <Compile Include="Cache\Base\IReadOnlyCache.cs" />
+    <Compile Include="Cache\ExpendituresCache.cs" />
+    <Compile Include="Cache\IExpendituresCache.cs" />
     <Compile Include="CategoriesPage.xaml.cs">
       <DependentUpon>CategoriesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataServices\IExchangeRateDataService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
