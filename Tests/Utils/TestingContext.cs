@@ -23,7 +23,10 @@ namespace Tests.Utils
             Kernel = new StandardKernel();
             RestConnection = new Mock<IRestConnection>();
             SettingsRepo = new Mock<ISettingsRepo>();
+            
             ExchangeRateService = new Mock<IExchangeRateDataService>();
+            ExchangeRateService.Setup(s => s.Get(It.IsAny<string>(), It.IsAny<string>())).Returns(1);
+            
             _filePathProvider = new Mock<IFilePathProvider>();
             _filePathProvider.SetupGet(p => p.Path).Returns(":memory:");
             _dateTimeProvider = new Mock<IDateTimeProvider>();
