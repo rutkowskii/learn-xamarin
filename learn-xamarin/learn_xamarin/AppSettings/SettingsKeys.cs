@@ -1,4 +1,4 @@
-﻿namespace learn_xamarin.Storage
+﻿namespace learn_xamarin.AppSettings
 {
     public class SettingsKeys
     {

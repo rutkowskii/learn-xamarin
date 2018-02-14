@@ -18,7 +18,7 @@ namespace learn_xamarin
             BindingContext = Container.Instance.Get<SettingsViewModel>();
         }
 
-        private async void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
+        private void ListView_OnItemTapped(object sender, ItemTappedEventArgs e)
         {
             var itemCasted = e.Item as SettingsViewModel.SettingsItem;
             ((ListView)sender).SelectedItem = null; // get rid of the selection, otherwise, the item will stay highlighted 

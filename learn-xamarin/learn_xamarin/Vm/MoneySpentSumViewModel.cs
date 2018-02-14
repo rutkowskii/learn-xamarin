@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using learn_xamarin.AppSettings;
 using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 using learn_xamarin.Navigation;
@@ -43,11 +44,11 @@ namespace learn_xamarin.Vm
         }
 
         public ICommand ConfirmationCommand { get; }
-        public string CurrentCurrencyCode => _settingsRepo.Get(SettingsKeys.CurrentCurrency);
+        public string CurrentCurrencyCode => _settingsRepo.CurrentCurrency;
 
         public string Sum
         {
-            get { return _sum; }
+            get => _sum;
             set
             {
                 _sum = value;

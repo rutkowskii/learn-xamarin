@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Linq;
+using learn_xamarin.AppSettings;
 using learn_xamarin.Cache.Base;
 using learn_xamarin.DataServices;
 using learn_xamarin.Model;
@@ -27,14 +28,7 @@ namespace learn_xamarin.Cache
         public decimal SumThisWeek { get; private set; }
         public decimal SumThisMonth { get; private set; }
 
-        protected override void OnInnerCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            base.OnInnerCollectionChanged(e);
-            e.OldItems?.Cast<Expenditure>().Foreach(SubtractForDeletedItems);
-            e.NewItems?.Cast<Expenditure>().Foreach(AddForNewItems);
-        }
-
-        private void AddForNewItems(Expenditure exp)
+        protected override void OnItemAdded(Expenditure exp)
         {
             var effectiveSum = SumInMainCurrency(exp);
             Sum += effectiveSum;
@@ -48,29 +42,14 @@ namespace learn_xamarin.Cache
             }
         }
 
-        private void SubtractForDeletedItems(Expenditure exp)
-        {
-            var effectiveSum = SumInMainCurrency(exp);
-            Sum -= effectiveSum;
-            if (exp.Timestamp > WeekStart(_dateTimeProvider.Now))
-            {
-                SumThisWeek -= effectiveSum;
-            }
-            if (exp.Timestamp > MonthStart(_dateTimeProvider.Now))
-            {
-                SumThisMonth -= effectiveSum;
-            }
-        }
-
         private decimal SumInMainCurrency(Expenditure exp)
         {
-            if (exp.CurrencyCode == _settingsRepo.Get(SettingsKeys.MainCurrency))
+            if (exp.CurrencyCode == _settingsRepo.MainCurrency)
             {
                 return exp.Sum;
             }
             // todo piotr more convenient way to access settings 
-            var exchangeRateRatio = _exchangeRateDataService.Get(
-                exp.CurrencyCode, _settingsRepo.Get(SettingsKeys.MainCurrency));
+            var exchangeRateRatio = _exchangeRateDataService.Get(exp.CurrencyCode, _settingsRepo.MainCurrency);
             return exchangeRateRatio * exp.Sum ?? 0;
         }
         

@@ -1,7 +1,9 @@
+using learn_xamarin.AppSettings;
 using learn_xamarin.Cache;
 using learn_xamarin.DataServices;
 using learn_xamarin.Navigation;
 using learn_xamarin.Storage;
+using learn_xamarin.UiUtils;
 using learn_xamarin.Vm;
 using Ninject;
 using RestSharp.Portable.HttpClient;
@@ -34,6 +36,7 @@ namespace learn_xamarin.Utils
             kernel.Bind<ILocalDatabase>().To<LocalDatabase>().InSingletonScope();
             kernel.Bind<IRestConnection>().To<RestConnection>().InSingletonScope();
             kernel.Bind<ISettingsRepo>().To<SettingsRepo>().InSingletonScope();
+            kernel.Bind<IAppSettingsDictionaryProvider>().To<AppSettingsDictionaryProvider>().InSingletonScope();
             kernel.Bind<IConnectionService>().To<ConnectionService>().InSingletonScope();
             kernel.Bind<INavigationService>().To<NavigationService>().InSingletonScope();
             kernel.Bind<RestClient>().To<RestClient>().InSingletonScope();
@@ -44,6 +47,8 @@ namespace learn_xamarin.Utils
 
             kernel.Bind<ICategoriesDataService>().To<CategoriesDataService>().InSingletonScope();
             kernel.Bind<IExpendituresDataService>().To<ExpendituresDataService>().InSingletonScope();
+            kernel.Bind<IDialogService>().To<DialogService>().InSingletonScope();
+            kernel.Bind<IExchangeRateDataService>().To<ExchangeRateDataService>().InSingletonScope();
         }
     }
 }

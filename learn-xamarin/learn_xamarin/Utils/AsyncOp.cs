@@ -52,7 +52,7 @@ namespace learn_xamarin.Utils
                     Result = resultCore
                 };
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
                 _onCancel.Invoke();
                 return new AsyncOpResult<T>{ResultFlag = OperationResult.Cancelled};

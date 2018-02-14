@@ -1,40 +1,28 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
+﻿using System;
+using System.Collections.ObjectModel;
 using learn_xamarin.Cache;
-using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 
 namespace learn_xamarin.Vm
 {
     public class StatementViewModel : ObservableObject
     {
-        private readonly IExpendituresDataService _expendituresDataService;
         private ObservableCollection<Expenditure> _statementElements;
-        
 
         public StatementViewModel(IExpendituresCache expendituresCache)
         {
             StatementElements = new ObservableCollection<Expenditure>();
-            expendituresCache.All().Foreach(Insert);
-            expendituresCache.CollectionChanged += OnCollectionChanged;
+            expendituresCache.ElementAdded.Subscribe(Insert);
         }
 
         public ObservableCollection<Expenditure> StatementElements
         {
-            get { return _statementElements; }
-            set
+            get => _statementElements;
+            private set
             {
                 _statementElements = value;
                 OnPropertyChanged(nameof(StatementElements));
             }
-        }
-        
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-            notifyCollectionChangedEventArgs.NewItems?
-                .Cast<Expenditure>()
-                .Foreach(Insert);
         }
 
         private void Insert(Expenditure newElement)

@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Windows.Input;
+using learn_xamarin.AppSettings;
 using learn_xamarin.Cache;
-using learn_xamarin.DataServices;
-using learn_xamarin.Model;
 using learn_xamarin.Navigation;
-using learn_xamarin.Utils;
 using Xamarin.Forms;
 
 namespace learn_xamarin.Vm
@@ -20,19 +16,22 @@ namespace learn_xamarin.Vm
         private string _spentToday;
         private string _lastExpenditures;
         private readonly IExpendituresCache _expendituresCache;
+        private readonly ISettingsRepo _settingsRepo;
 
         public WelcomeViewModel(
             INavigationService navigationService,
-            IExpendituresCache expendituresCache)
+            IExpendituresCache expendituresCache,
+            ISettingsRepo settingsRepo)
         {
             _navigationService = navigationService;
             _expendituresCache = expendituresCache;
-            _expendituresCache.CollectionChanged += OnCacheUpdated;
-            UpdateSummariesFromCache();
+            _settingsRepo = settingsRepo;
+            _expendituresCache.ElementAdded.Subscribe(_ => UpdateSummariesFromCache());
+            _settingsRepo.SettingsUpdated.Subscribe(_ => UpdateSummariesFromCache());
             MoneySpentCommnand = new Command(MoneySpent);
         }
 
-        public ICommand MoneySpentCommnand { get; private set; }
+        public ICommand MoneySpentCommnand { get; }
         
         private void MoneySpent()
         {
@@ -78,17 +77,14 @@ namespace learn_xamarin.Vm
                 OnPropertyChanged(nameof(SpentThisWeek));
             }
         }
-        
-        private void OnCacheUpdated(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
-        {
-            UpdateSummariesFromCache();
-        }
 
         private void UpdateSummariesFromCache()
         {
-            SpentThisWeek = _expendituresCache.SumThisWeek > 0 ? $"Spent {_expendituresCache.SumThisWeek:0.##} this week" : string.Empty;
-            SpentThisMonth = _expendituresCache.SumThisMonth > 0 ?  $"Spent {_expendituresCache.SumThisMonth:0.##} this month" : string.Empty;
-            SpentOverall = _expendituresCache.Sum > 0 ? $"Spent {_expendituresCache.Sum:0.##} overall" : string.Empty;
+            SpentThisWeek = _expendituresCache.SumThisWeek > 0 ? $"Spent {_expendituresCache.SumThisWeek:0.##} {MainCurrency} this week" : string.Empty;
+            SpentThisMonth = _expendituresCache.SumThisMonth > 0 ?  $"Spent {_expendituresCache.SumThisMonth:0.##} {MainCurrency} this month" : string.Empty;
+            SpentOverall = _expendituresCache.Sum > 0 ? $"Spent {_expendituresCache.Sum:0.##} {MainCurrency} overall" : string.Empty;
         }
+
+        private string MainCurrency => _settingsRepo.MainCurrency;
     }
 }

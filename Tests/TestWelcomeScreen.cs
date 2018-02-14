@@ -50,7 +50,7 @@ namespace Tests
         private void AssertThisWeekSumLabel(decimal sum)
         {
             var actualLabel = _tc.Kernel.Get<WelcomeViewModel>().SpentThisWeek;
-            Assert.AreEqual($"Spent {sum} this week", actualLabel);
+            Assert.AreEqual($"Spent {sum} PLN this week", actualLabel);
         }
     }
 }

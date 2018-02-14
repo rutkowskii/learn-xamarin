@@ -1,6 +1,7 @@
 ﻿using learn_xamarin.Model;
 using learn_xamarin.Vm;
 using Ninject;
+using Ploeh.AutoFixture;
 
 namespace Tests.Utils
 {
@@ -13,6 +14,13 @@ namespace Tests.Utils
         {
             _category = category;
             _sum = sum;
+        }
+
+        public InsertExpenditureAction()
+        {
+            var fixture = new Fixture();
+            _category = fixture.Create<Category>();
+            _sum = fixture.Create<decimal>();
         }
 
         public void Run(TestingContext tc)

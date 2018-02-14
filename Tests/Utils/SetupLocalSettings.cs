@@ -1,4 +1,5 @@
-﻿using learn_xamarin.Storage;
+﻿using learn_xamarin.AppSettings;
+using Ninject;
 
 namespace Tests.Utils
 {
@@ -15,8 +16,9 @@ namespace Tests.Utils
         
         public void Setup(TestingContext testingContext)
         {
-            testingContext.SettingsRepo.Setup(r => r.Get(SettingsKeys.CurrentCurrency)).Returns(CurrentCurrency);
-            testingContext.SettingsRepo.Setup(r => r.Get(SettingsKeys.MainCurrency)).Returns(MainCurrency);
+            var repo = testingContext.Kernel.Get<ISettingsRepo>();
+            repo.CurrentCurrency = CurrentCurrency;
+            repo.MainCurrency = MainCurrency;
         }
     }
 }

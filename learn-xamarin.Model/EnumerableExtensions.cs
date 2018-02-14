@@ -14,6 +14,11 @@ namespace learn_xamarin.Model
             }
         }
 
+        public static TVal GetOrDefault<TKey, TVal>(this IDictionary<TKey, TVal> dict, TKey key)
+        {
+            return dict.ContainsKey(key) ? dict[key] : default(TVal);
+        }
+
         public static T FirstOrDefault<T>(this IEnumerable<T> collection, Func<T, bool> predicate, T defaultValue) where T : class
         {
             var result = collection.FirstOrDefault(predicate);

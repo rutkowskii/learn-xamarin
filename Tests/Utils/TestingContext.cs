@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using learn_xamarin.AppSettings;
 using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 using learn_xamarin.Navigation;
 using learn_xamarin.Storage;
+using learn_xamarin.UiUtils;
 using learn_xamarin.Utils;
 using Moq;
 using Ninject;
@@ -13,19 +16,27 @@ namespace Tests.Utils
     {
         private readonly Mock<IFilePathProvider> _filePathProvider;
         private readonly Mock<IDateTimeProvider> _dateTimeProvider;
+        private readonly Dictionary<string, object> _settings;
+        private readonly Mock<IAppSettingsDictionaryProvider> _appSettingsDictionaryProvider;
+        
         public StandardKernel Kernel { get; }
         public Mock<IRestConnection> RestConnection { get; }
-        public Mock<ISettingsRepo> SettingsRepo { get; }
         public Mock<IExchangeRateDataService> ExchangeRateService { get; }
+        public Mock<IDialogService> DialogService { get; }
 
         public TestingContext()
         {
             Kernel = new StandardKernel();
             RestConnection = new Mock<IRestConnection>();
-            SettingsRepo = new Mock<ISettingsRepo>();
             
+            _settings = new Dictionary<string, object>();
+            _appSettingsDictionaryProvider = new Mock<IAppSettingsDictionaryProvider>();
+            _appSettingsDictionaryProvider.Setup(p => p.Settings).Returns(_settings);
+                
             ExchangeRateService = new Mock<IExchangeRateDataService>();
             ExchangeRateService.Setup(s => s.Get(It.IsAny<string>(), It.IsAny<string>())).Returns(1);
+            
+            DialogService = new Mock<IDialogService>();
             
             _filePathProvider = new Mock<IFilePathProvider>();
             _filePathProvider.SetupGet(p => p.Path).Returns(":memory:");
@@ -49,9 +60,10 @@ namespace Tests.Utils
         {
             BindToMock(kernel, _filePathProvider);
             BindToMock(kernel, RestConnection);
-            BindToMock(kernel, SettingsRepo);
+            BindToMock(kernel, _appSettingsDictionaryProvider);
             BindToMock(kernel, ExchangeRateService);
             BindToMock(kernel, _dateTimeProvider);
+            BindToMock(kernel, DialogService);
             BindToMock<INavigationService>(kernel);
         }
 
