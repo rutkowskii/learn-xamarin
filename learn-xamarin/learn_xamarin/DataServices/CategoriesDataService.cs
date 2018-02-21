@@ -30,11 +30,7 @@ namespace learn_xamarin.DataServices
 
         private Category[] OnCategoriesLoadSuccess(IRestResponse rawResult)
         {
-            System.Diagnostics.Debug.WriteLine(
-                $"HTTP CALL RETURNING, Status: {rawResult.StatusCode}, Desc: {rawResult.StatusDescription} ");
             var serverResults = JsonConvert.DeserializeObject<Category[]>(rawResult.Content);
-            System.Diagnostics.Debug.WriteLine(
-                $"[{serverResults.Length}] categories returned from the server, writing them to the local db");
             _localDb.UpdateCategories(serverResults);
             return serverResults;
         }

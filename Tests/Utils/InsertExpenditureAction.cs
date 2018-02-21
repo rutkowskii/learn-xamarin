@@ -1,11 +1,12 @@
-﻿using learn_xamarin.Model;
+﻿using System;
+using learn_xamarin.Model;
 using learn_xamarin.Vm;
 using Ninject;
 using Ploeh.AutoFixture;
 
 namespace Tests.Utils
 {
-    public class InsertExpenditureAction
+    public class InsertExpenditureAction : ITestSetup
     {
         private readonly Category _category;
         private readonly decimal _sum;
@@ -16,6 +17,9 @@ namespace Tests.Utils
             _sum = sum;
         }
 
+        public decimal Sum => _sum;
+        public Guid CategoryId => _category.Id;
+
         public InsertExpenditureAction()
         {
             var fixture = new Fixture();
@@ -23,7 +27,7 @@ namespace Tests.Utils
             _sum = fixture.Create<decimal>();
         }
 
-        public void Run(TestingContext tc)
+        public void Setup(TestingContext tc)
         {
             tc.Kernel.Get<MoneySpentDialogViewModel>().CategorySelected = _category;
             tc.Kernel.Get<MoneySpentDialogViewModel>().Sum = _sum;

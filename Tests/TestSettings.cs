@@ -20,21 +20,17 @@ namespace Tests
         public void Setup()
         {
             _tc = new TestingContext();
-            _tc.RunSetups(new SetupLocalSettings(Currency.Pln.Code, Currency.Pln.Code));
-            new InsertExpenditureAction().Run(_tc);
+            _tc.Run(new SetupLocalSettings(Currency.Pln.Code, Currency.Pln.Code));
+            new InsertExpenditureAction().Setup(_tc);
             _settingsViewModel = _tc.Kernel.Get<SettingsViewModel>();
         }
         
         [Test]
         public void Main_currency_is_updated_from_ui()
         {
-            SetupDialog(SettingsViewModel.MainCurrencyDialogTitle, Currency.Eur.Code);
+            SetupDialogResult(SettingsViewModel.MainCurrencyDialogTitle, Currency.Eur.Code);
 
-            _settingsViewModel
-                .SettingsCollection
-                .Single(x => x.Label.StartsWith("Main currency"))
-                .Cmd
-                .Execute(null);
+            ClickSettingsItem("Main currency");
 
             var actualSettingsState = _settingsViewModel.SettingsCollection.Select(x => x.Label).ToArray();
             CollectionAssert.Contains(actualSettingsState, "Main currency: EUR");
@@ -46,13 +42,9 @@ namespace Tests
         [Test]
         public void Current_currency_is_updated_from_ui() 
         {
-            SetupDialog(SettingsViewModel.CurrentCurrencyDialogTitle, Currency.Gbp.Code);
+            SetupDialogResult(SettingsViewModel.CurrentCurrencyDialogTitle, Currency.Gbp.Code);
 
-            _settingsViewModel
-                .SettingsCollection
-                .Single(x => x.Label.StartsWith("Current currency"))
-                .Cmd
-                .Execute(null);
+            ClickSettingsItem("Current currency");
             
             var actualSettingsState = _settingsViewModel.SettingsCollection.Select(x => x.Label).ToArray();
             CollectionAssert.Contains(actualSettingsState, "Current currency: GBP");
@@ -60,11 +52,20 @@ namespace Tests
             Assert.AreEqual(Currency.Gbp.Code, _tc.Kernel.Get<MoneySpentSumViewModel>().CurrentCurrencyCode);
         }
 
-        private void SetupDialog(string dialogTitle, string dialogResult)
+        private void SetupDialogResult(string dialogTitle, string dialogResult)
         {
             _tc.DialogService.Setup(s =>
                     s.DisplayActionSheet(It.IsAny<Page>(), dialogTitle, It.IsAny<string[]>()))
                 .Returns(Task.FromResult(dialogResult));
+        }
+
+        private void ClickSettingsItem(string settingName)
+        {
+            _settingsViewModel
+                .SettingsCollection
+                .Single(x => x.Label.StartsWith(settingName))
+                .Cmd
+                .Execute(null);
         }
     }
 }

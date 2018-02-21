@@ -5,6 +5,7 @@ using learn_xamarin.Cache;
 using learn_xamarin.Model;
 using learn_xamarin.Storage;
 using learn_xamarin.Utils;
+using Newtonsoft.Json;
 
 namespace learn_xamarin.DataServices
 {
@@ -19,13 +20,11 @@ namespace learn_xamarin.DataServices
             _localDatabase = localDatabase;
             _restConnection = restConnection;
             _cache = expendituresCache;
-            _localDatabase.GetAllExpenditures().Foreach(_cache.Add);
         }
         
         public void Add(Expenditure expenditure)
         {
-            _localDatabase.Insert(expenditure);
-            _cache.Add(expenditure);
+            AddExpenditureLocally(expenditure);
             AsyncOp.Get(
                 asyncOp: () => _restConnection.Post(RestCallsConstants.Expenditure, expenditure.AsArray()),
                 onSuccess: x => { },
@@ -33,18 +32,11 @@ namespace learn_xamarin.DataServices
                 onCancel: () => _localDatabase.Insert(new UnsynchronizedItem{ Id = expenditure.Id})
             ).Run();
         }
-        
+
         public void TrySynchronize(Action<Expenditure[]> callback) // just do this when the welcome screen appears?
         {
             var currentlyCashed = _localDatabase.GetAllExpenditures();
             var unsynchronizedIds = new HashSet<Guid>(_localDatabase.GetAllUnsynchronizedItems().Select(i => i.Id));
-            
-            UploadExpendituresToServer(currentlyCashed, unsynchronizedIds); //  todo piotr this is naive, 1-way so far. 
-            callback(currentlyCashed);
-        }
-
-        private void UploadExpendituresToServer(Expenditure[] currentlyCashed, HashSet<Guid> unsynchronizedIds)
-        {
             var itemsToUpload = currentlyCashed.Where(exp => unsynchronizedIds.Contains(exp.Id)).ToArray();
             if (itemsToUpload.Any())
             {
@@ -55,6 +47,23 @@ namespace learn_xamarin.DataServices
                     onCancel: () => { }
                 ).Run();
             }
+
+            AsyncOp.Get(
+                asyncOp: () => _restConnection.Get(RestCallsConstants.Expenditure),
+                onSuccess: x => JsonConvert.DeserializeObject<Expenditure[]>(x.Content).Foreach(AddExpenditureLocally),
+                onFailure: x => { },
+                onCancel: () => { }
+            ).Run();
+            
+            // todo piotr adding to cache ?? 
+            callback(currentlyCashed);
+        }
+
+        private void AddExpenditureLocally(Expenditure expenditure)
+        {
+            if (_cache.IsStored(expenditure.Id)) return;
+            _cache.Add(expenditure);
+            _localDatabase.Insert(expenditure);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using learn_xamarin.AppSettings;
@@ -15,21 +16,29 @@ namespace learn_xamarin.Cache
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ISettingsRepo _settingsRepo;
         private readonly IExchangeRateDataService _exchangeRateDataService;
+        private readonly HashSet<Guid> _ids;
 
         public ExpendituresCache(IDateTimeProvider dateTimeProvider, ISettingsRepo settingsRepo, IExchangeRateDataService exchangeRateDataService)
         {
             _dateTimeProvider = dateTimeProvider;
             _settingsRepo = settingsRepo;
             _exchangeRateDataService = exchangeRateDataService;
+            _ids = new HashSet<Guid>();
             Sum = 0;
         }
         
         public decimal Sum { get; private set; }
         public decimal SumThisWeek { get; private set; }
         public decimal SumThisMonth { get; private set; }
+        
+        public bool IsStored(Guid id)
+        {
+            return _ids.Contains(id);
+        }
 
         protected override void OnItemAdded(Expenditure exp)
         {
+            _ids.Add(exp.Id);
             var effectiveSum = SumInMainCurrency(exp);
             Sum += effectiveSum;
             if (exp.Timestamp > WeekStart(_dateTimeProvider.Now))

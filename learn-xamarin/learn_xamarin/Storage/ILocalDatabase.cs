@@ -5,7 +5,7 @@ namespace learn_xamarin.Storage
 {
     public interface ILocalDatabase
     {
-        void UpdateCategories(Category[] e);
+        void UpdateCategories(Category[] categories);
         Category[] GetAllCategories();
 
         void Insert(Expenditure expenditure);

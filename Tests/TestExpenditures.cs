@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
+using learn_xamarin.Cache;
 using learn_xamarin.DataServices;
 using learn_xamarin.Model;
 using learn_xamarin.Storage;
@@ -25,77 +27,146 @@ namespace Tests
         private readonly Fixture _fixture;
         private SetupLocalSettings _setupLocalSettings;
         private TestingContext _tc;
-        private Category _category;
-        private decimal _sum;
 
         [SetUp]
         public void Setup()
         {
             _tc = new TestingContext();
             _setupLocalSettings = new SetupLocalSettings();
-            _tc.RunSetups(_setupLocalSettings);
-            _category = _fixture.Create<Category>();
-            _sum = _fixture.Create<decimal>();
+            _tc.Run(_setupLocalSettings);
         }
-        
+
         [Test]
         public void Expenditures_are_shown_in_the_statements_when_server_is_DOWN()
         {
-            _tc.RunSetups(new SetupUnavailableServer());
+            var insertExpenditureAction = new InsertExpenditureAction();
 
-            InsertSampleExpenditure();
+            _tc.Run(new SetupUnavailableServer(), insertExpenditureAction);
 
-            AssertTopStatementElementValues();
+            this.AssertTopStatementElement(insertExpenditureAction);
         }
-        
+
         [Test]
         public void Expenditures_are_shown_in_the_statements_starting_with_the_latest()
         {
-            var category1 = _fixture.Create<Category>();
-            var category2 = _fixture.Create<Category>();
-            var sum1 = _fixture.Create<decimal>();
-            var sum2 = _fixture.Create<decimal>();
-            
-            _tc.RunSetups(new SetupStubServer());
+            _tc.Run(new SetupStubServer());
+            var expenditure1 = new InsertExpenditureAction();
+            var expenditure2 = new InsertExpenditureAction();
+            var expenditure3 = new InsertExpenditureAction();
+            var expenditureActionsByLatest = new[] {expenditure3, expenditure2, expenditure1};
 
-            _tc.SetupTime(DateTime.Today.AddHours(8).AddMinutes(20));
-            new InsertExpenditureAction(category1, sum1).Run(_tc);
-            _tc.SetupTime(DateTime.Today.AddHours(8).AddMinutes(35));
-            new InsertExpenditureAction(category2, sum2).Run(_tc);
+            _tc.Run(
+                expenditure1,
+                new AdvanceTimeAction(),
+                expenditure2,
+                new AdvanceTimeAction(),
+                expenditure3);
+
+
+            var expectedSums = expenditureActionsByLatest.Select(x => x.Sum).ToArray();
+            var expectedCategories = expenditureActionsByLatest.Select(x => x.CategoryId).ToArray();
 
             var actualStementElements = _tc.Kernel.Get<StatementViewModel>().StatementElements.ToArray();
-            CollectionAssert.AreEqual(new[]{sum2, sum1}, actualStementElements.Select(x => x.Sum).ToArray());
-            CollectionAssert.AreEqual(new[]{category2.Id, category1.Id}, actualStementElements.Select(x => x.CategoryId).ToArray());
+            CollectionAssert.AreEqual(expectedSums, actualStementElements.Select(x => x.Sum).ToArray());
+            CollectionAssert.AreEqual(expectedCategories, actualStementElements.Select(x => x.CategoryId).ToArray());
         }
 
         [Test]
         public void Expenditures_are_saved_as_unsynchronized_when_the_server_is_DOWN()
         {
-            _tc.RunSetups(new SetupUnavailableServer());
+            _tc.Run(
+                new SetupUnavailableServer(),
+                new InsertExpenditureAction(),
+                new InsertExpenditureAction(),
+                new InsertExpenditureAction()
+            );
 
-            InsertSampleExpenditure();
-
-            var unsynchronizedElementId = _tc.Kernel.Get<ILocalDatabase>()
-                .GetAllUnsynchronizedItems()
-                .Single()
-                .Id;
-            
-            Assert.AreEqual(TopStatementElement.Id, unsynchronizedElementId);
+            var unsynchronizedElementId =
+                _tc.Kernel.Get<ILocalDatabase>().GetAllUnsynchronizedItems().Select(x => x.Id).ToArray();
+            var statementElementIds =
+                _tc.Kernel.Get<StatementViewModel>().StatementElements.Select(x => x.Id).ToArray();
+            CollectionAssert.AreEquivalent(statementElementIds, unsynchronizedElementId);
         }
 
         [Test]
         public void Unsynchronized_expenditures_are_passed_to_the_server_when_it_is_UP()
         {
-            _tc.RunSetups(new SetupUnavailableServer());
-            
-            InsertSampleExpenditure();
-            
             var stubServer = new SetupStubServer();
-            _tc.RunSetups(stubServer);
-            _tc.Kernel.Get<IExpendituresDataService>().TrySynchronize(_ => { });
-            
-            AssertExpenditureWasPassedToServer(stubServer);
+            var insertExpenditureAction = new InsertExpenditureAction();
+
+            _tc.Run(
+                new SetupUnavailableServer(),
+                insertExpenditureAction,
+                stubServer,
+                new SynchronizationAction()
+            );
+
+            AssertExpenditureWasPassedToServer(insertExpenditureAction, stubServer);
             AssertThereAreNoUnsynchronizedItems();
+            AssertExpenditureMatch(insertExpenditureAction, stubServer.ServerExpenditures.Single());
+        }
+
+
+        [Test]
+        public void Server_expenditures_are_downloaded_when_available()
+        {
+            var initialServerExpenditures = _fixture.CreateMany<Expenditure>();
+            _tc.Run(
+                new SetupStubServer().WithExpenditures(initialServerExpenditures),
+                new SynchronizationAction());
+
+            AssertExpendituresAreStoredLocally(initialServerExpenditures);
+            AssertExpendituresAreStoredInCache(initialServerExpenditures);
+        }
+
+        [Test]
+        public void When_server_and_local_state_differ_successful_synchronization_updates_both_of_them()
+        {
+            var initialLocalExpenditures = InsertSampleExpenditures();
+
+            var initialServerExpenditures = _fixture.CreateMany<Expenditure>();
+            var setupStubServer = new SetupStubServer().WithExpenditures(initialServerExpenditures);
+
+            _tc.Run(
+                new SetupUnavailableServer(), 
+                setupStubServer, 
+                new SynchronizationAction());
+
+
+            var expectedAll = initialLocalExpenditures.Concat(initialServerExpenditures).ToArray();
+
+            AssertExpendituresAreStoredLocally(expectedAll);
+            AssertExpendituresAreStoredInCache(expectedAll);
+            AssertExpendituresAreStoredInServer(expectedAll, setupStubServer);
+        }
+
+        private void AssertExpendituresAreStoredInServer(IEnumerable<Expenditure> initialServerExpenditures, SetupStubServer server)
+        {
+            var expected = initialServerExpenditures.Select(e => e.Id).ToArray();
+            var actualServerExpendituresIds = server.ServerExpenditures.Select(e => e.Id).ToArray();
+            CollectionAssert.AreEquivalent(expected, actualServerExpendituresIds);
+        }
+
+        private void AssertExpendituresAreStoredInCache(IEnumerable<Expenditure> initialServerExpenditures)
+        {
+            var expected = initialServerExpenditures.Select(e => e.Id).ToArray();
+            var actualCacheExpendituresIds =
+                this._tc.Kernel.Get<IExpendituresCache>().All().Select(e => e.Id).ToArray();
+            CollectionAssert.AreEquivalent(expected, actualCacheExpendituresIds);
+        }
+
+        private void AssertExpendituresAreStoredLocally(IEnumerable<Expenditure> initialServerExpenditures)
+        {
+            var expected = initialServerExpenditures.Select(e => e.Id).ToArray();
+            var actualLocalDbExpendituresIds =
+                this._tc.Kernel.Get<ILocalDatabase>().GetAllExpenditures().Select(e => e.Id).ToArray();
+            CollectionAssert.AreEquivalent(expected, actualLocalDbExpendituresIds);
+        }
+
+        private void AssertExpenditureMatch(InsertExpenditureAction action, Expenditure actualExpenditure)
+        {
+            Assert.AreEqual(action.CategoryId, actualExpenditure.CategoryId);
+            Assert.AreEqual(action.Sum, actualExpenditure.Sum);
         }
 
         private void AssertThereAreNoUnsynchronizedItems()
@@ -103,31 +174,31 @@ namespace Tests
             Assert.AreEqual(0, _tc.Kernel.Get<ILocalDatabase>().GetAllUnsynchronizedItems().Length);
         }
 
-        private void AssertExpenditureWasPassedToServer(SetupStubServer stubServer)
+        private void AssertExpenditureWasPassedToServer(
+            InsertExpenditureAction insertExpenditureAction, SetupStubServer stubServer)
         {
             var actual = (stubServer.LastData as Expenditure[]).Single();
-            Assert.AreEqual(_category.Id, actual.CategoryId);
-            Assert.AreEqual(_sum, actual.Sum);
+            Assert.AreEqual(insertExpenditureAction.CategoryId, actual.CategoryId);
+            Assert.AreEqual(insertExpenditureAction.Sum, actual.Sum);
             Assert.AreEqual(_setupLocalSettings.CurrentCurrency, actual.CurrencyCode);
         }
 
-        private void AssertTopStatementElementValues()
+        private void AssertTopStatementElement(InsertExpenditureAction insertExpenditureAction)
         {
             var actual = TopStatementElement;
-            Assert.AreEqual(_category.Id, actual.CategoryId);
-            Assert.AreEqual(_sum, actual.Sum);
+            Assert.AreEqual(insertExpenditureAction.CategoryId, actual.CategoryId);
+            Assert.AreEqual(insertExpenditureAction.Sum, actual.Sum);
             Assert.AreEqual(_setupLocalSettings.CurrentCurrency, actual.CurrencyCode);
         }
-        
-        // todo piotr now the synchronization. think of WHEN to trigger the sync.
+
         /// todo piotr timezones when displaying the statement?
-        // once it works, we done with it!
 
         private Expenditure TopStatementElement => _tc.Kernel.Get<StatementViewModel>().StatementElements.First();
 
-        private void InsertSampleExpenditure()
+        private Expenditure[] InsertSampleExpenditures()
         {
-            new InsertExpenditureAction(_category, _sum).Run(_tc);
+            for (var i = 0; i < 3; i++) new InsertExpenditureAction().Setup(_tc);
+            return _tc.Kernel.Get<ILocalDatabase>().GetAllExpenditures();
         }
     }
 }
