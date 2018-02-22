@@ -53,6 +53,7 @@
       <DependentUpon>CategoriesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataServices\IExchangeRateDataService.cs" />
+    <Compile Include="DataServices\Synchronizer.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -150,9 +151,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\learn-xamarin.Model\learn-xamarin.Model.csproj">

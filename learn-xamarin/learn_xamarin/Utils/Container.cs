@@ -49,6 +49,7 @@ namespace learn_xamarin.Utils
             kernel.Bind<IExpendituresDataService>().To<ExpendituresDataService>().InSingletonScope();
             kernel.Bind<IDialogService>().To<DialogService>().InSingletonScope();
             kernel.Bind<IExchangeRateDataService>().To<ExchangeRateDataService>().InSingletonScope();
+            kernel.Bind<Synchronizer>().To<Synchronizer>().InSingletonScope();
         }
     }
 }

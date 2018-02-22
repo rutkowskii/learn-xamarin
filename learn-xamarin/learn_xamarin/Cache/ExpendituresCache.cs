@@ -53,15 +53,17 @@ namespace learn_xamarin.Cache
 
         private decimal SumInMainCurrency(Expenditure exp)
         {
-            if (exp.CurrencyCode == _settingsRepo.MainCurrency)
-            {
-                return exp.Sum;
-            }
-            // todo piotr more convenient way to access settings 
+            return exp.CurrencyCode == _settingsRepo.MainCurrency 
+                ? exp.Sum 
+                : CalculateSumUsingExchangeRate(exp);
+        }
+
+        private decimal CalculateSumUsingExchangeRate(Expenditure exp)
+        {
             var exchangeRateRatio = _exchangeRateDataService.Get(exp.CurrencyCode, _settingsRepo.MainCurrency);
             return exchangeRateRatio * exp.Sum ?? 0;
         }
-        
+
         private DateTime MonthStart(DateTime dt)
         {
             return new DateTime(dt.Year, dt.Month, 1);

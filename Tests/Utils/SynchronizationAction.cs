@@ -7,7 +7,7 @@ namespace Tests.Utils
     {
         public void Setup(TestingContext testingContext)
         {
-            testingContext.Kernel.Get<IExpendituresDataService>().TrySynchronize(_ => { });
+            testingContext.Kernel.Get<Synchronizer>().Synchronize();
         }
     }
 }

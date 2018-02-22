@@ -13,31 +13,41 @@ namespace learn_xamarin.DataServices
     {
         private readonly ILocalDatabase _localDatabase;
         private readonly IRestConnection _restConnection;
-        private readonly IExpendituresCache _cache; 
+        private readonly IExpendituresCache _cache;
 
-        public ExpendituresDataService(ILocalDatabase localDatabase, IRestConnection restConnection, IExpendituresCache expendituresCache)
+        public ExpendituresDataService(
+            ILocalDatabase localDatabase, IRestConnection restConnection, IExpendituresCache expendituresCache)
         {
             _localDatabase = localDatabase;
             _restConnection = restConnection;
             _cache = expendituresCache;
         }
-        
+
         public void Add(Expenditure expenditure)
         {
             AddExpenditureLocally(expenditure);
             AsyncOp.Get(
                 asyncOp: () => _restConnection.Post(RestCallsConstants.Expenditure, expenditure.AsArray()),
                 onSuccess: x => { },
-                onFailure: x => _localDatabase.Insert(new UnsynchronizedItem{ Id = expenditure.Id}),
-                onCancel: () => _localDatabase.Insert(new UnsynchronizedItem{ Id = expenditure.Id})
+                onFailure: x => _localDatabase.Insert(new UnsynchronizedItem {Id = expenditure.Id}),
+                onCancel: () => _localDatabase.Insert(new UnsynchronizedItem {Id = expenditure.Id})
             ).Run();
         }
 
-        public void TrySynchronize(Action<Expenditure[]> callback) // just do this when the welcome screen appears?
+        public void TrySynchronize()
         {
-            var currentlyCashed = _localDatabase.GetAllExpenditures();
-            var unsynchronizedIds = new HashSet<Guid>(_localDatabase.GetAllUnsynchronizedItems().Select(i => i.Id));
-            var itemsToUpload = currentlyCashed.Where(exp => unsynchronizedIds.Contains(exp.Id)).ToArray();
+            var localItems = _localDatabase.GetAllExpenditures();
+            LoadLocalItemsToCache(localItems);
+
+            var itemsToUpload = ResolveUnsynchronizedLocalItems(localItems);
+
+            LoadExpendituresFromServer();
+            
+            UploadToServer(itemsToUpload);
+        }
+
+        private void UploadToServer(Expenditure[] itemsToUpload)
+        {
             if (itemsToUpload.Any())
             {
                 AsyncOp.Get(
@@ -47,16 +57,35 @@ namespace learn_xamarin.DataServices
                     onCancel: () => { }
                 ).Run();
             }
+        }
 
+        private void LoadExpendituresFromServer()
+        {
             AsyncOp.Get(
                 asyncOp: () => _restConnection.Get(RestCallsConstants.Expenditure),
                 onSuccess: x => JsonConvert.DeserializeObject<Expenditure[]>(x.Content).Foreach(AddExpenditureLocally),
                 onFailure: x => { },
                 onCancel: () => { }
             ).Run();
-            
-            // todo piotr adding to cache ?? 
-            callback(currentlyCashed);
+        }
+
+        private Expenditure[] ResolveUnsynchronizedLocalItems(Expenditure[] localItems)
+        {
+            var unsynchronizedIds =
+                new HashSet<Guid>(_localDatabase.GetAllUnsynchronizedItems().Select(i => i.Id));
+            var itemsToUpload = localItems.Where(exp => unsynchronizedIds.Contains(exp.Id)).ToArray();
+            return itemsToUpload;
+        }
+
+        private void LoadLocalItemsToCache(Expenditure[] localItems)
+        {
+            localItems.Foreach(x =>
+            {
+                if (!_cache.IsStored(x.Id))
+                {
+                    _cache.Add(x);
+                }
+            });
         }
 
         private void AddExpenditureLocally(Expenditure expenditure)

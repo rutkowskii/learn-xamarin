@@ -43,13 +43,13 @@ namespace Tests
 
             _tc.Run(new SetupUnavailableServer(), insertExpenditureAction);
 
-            this.AssertTopStatementElement(insertExpenditureAction);
+            AssertTopStatementElement(insertExpenditureAction);
         }
 
         [Test]
         public void Expenditures_are_shown_in_the_statements_starting_with_the_latest()
         {
-            _tc.Run(new SetupStubServer());
+            _tc.Run(new SetupExpendituresServer());
             var expenditure1 = new InsertExpenditureAction();
             var expenditure2 = new InsertExpenditureAction();
             var expenditure3 = new InsertExpenditureAction();
@@ -91,7 +91,7 @@ namespace Tests
         [Test]
         public void Unsynchronized_expenditures_are_passed_to_the_server_when_it_is_UP()
         {
-            var stubServer = new SetupStubServer();
+            var stubServer = new SetupExpendituresServer();
             var insertExpenditureAction = new InsertExpenditureAction();
 
             _tc.Run(
@@ -112,7 +112,7 @@ namespace Tests
         {
             var initialServerExpenditures = _fixture.CreateMany<Expenditure>();
             _tc.Run(
-                new SetupStubServer().WithExpenditures(initialServerExpenditures),
+                new SetupExpendituresServer().WithExpenditures(initialServerExpenditures),
                 new SynchronizationAction());
 
             AssertExpendituresAreStoredLocally(initialServerExpenditures);
@@ -122,13 +122,13 @@ namespace Tests
         [Test]
         public void When_server_and_local_state_differ_successful_synchronization_updates_both_of_them()
         {
+            _tc.Run(new SetupUnavailableServer());
             var initialLocalExpenditures = InsertSampleExpenditures();
 
             var initialServerExpenditures = _fixture.CreateMany<Expenditure>();
-            var setupStubServer = new SetupStubServer().WithExpenditures(initialServerExpenditures);
+            var setupStubServer = new SetupExpendituresServer().WithExpenditures(initialServerExpenditures);
 
             _tc.Run(
-                new SetupUnavailableServer(), 
                 setupStubServer, 
                 new SynchronizationAction());
 
@@ -140,7 +140,7 @@ namespace Tests
             AssertExpendituresAreStoredInServer(expectedAll, setupStubServer);
         }
 
-        private void AssertExpendituresAreStoredInServer(IEnumerable<Expenditure> initialServerExpenditures, SetupStubServer server)
+        private void AssertExpendituresAreStoredInServer(IEnumerable<Expenditure> initialServerExpenditures, SetupExpendituresServer server)
         {
             var expected = initialServerExpenditures.Select(e => e.Id).ToArray();
             var actualServerExpendituresIds = server.ServerExpenditures.Select(e => e.Id).ToArray();
@@ -151,7 +151,7 @@ namespace Tests
         {
             var expected = initialServerExpenditures.Select(e => e.Id).ToArray();
             var actualCacheExpendituresIds =
-                this._tc.Kernel.Get<IExpendituresCache>().All().Select(e => e.Id).ToArray();
+                _tc.Kernel.Get<IExpendituresCache>().All().Select(e => e.Id).ToArray();
             CollectionAssert.AreEquivalent(expected, actualCacheExpendituresIds);
         }
 
@@ -159,7 +159,7 @@ namespace Tests
         {
             var expected = initialServerExpenditures.Select(e => e.Id).ToArray();
             var actualLocalDbExpendituresIds =
-                this._tc.Kernel.Get<ILocalDatabase>().GetAllExpenditures().Select(e => e.Id).ToArray();
+                _tc.Kernel.Get<ILocalDatabase>().GetAllExpenditures().Select(e => e.Id).ToArray();
             CollectionAssert.AreEquivalent(expected, actualLocalDbExpendituresIds);
         }
 
@@ -175,9 +175,9 @@ namespace Tests
         }
 
         private void AssertExpenditureWasPassedToServer(
-            InsertExpenditureAction insertExpenditureAction, SetupStubServer stubServer)
+            InsertExpenditureAction insertExpenditureAction, SetupExpendituresServer expendituresServer)
         {
-            var actual = (stubServer.LastData as Expenditure[]).Single();
+            var actual = (expendituresServer.LastData as Expenditure[]).Single();
             Assert.AreEqual(insertExpenditureAction.CategoryId, actual.CategoryId);
             Assert.AreEqual(insertExpenditureAction.Sum, actual.Sum);
             Assert.AreEqual(_setupLocalSettings.CurrentCurrency, actual.CurrencyCode);
